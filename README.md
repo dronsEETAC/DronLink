@@ -1,5 +1,6 @@
 # La librería DronLink
 DronLink es una librería que pretende facilitar el desarrollo de aplicaciones de control del dron. Ofrece una amplia variedad de funcionalidades y se está diseñando con la mente puesta en las posibles necesidades del Drone Engineering Ecosystem (DEE).    
+ 
 En este repositorio puede encontrarse el código de la librería y varias aplicaciones que demuestran su uso, en una variedad de contextos. Es importante tener presente que DronLink está en desarrollo y, por tanto, no exenta de errores.
 ## 1. Alternativa a DroneKit
 Los primeros módulos del DEE se implementaron usando la librería DroneKit, que es la más usada y documentada. Sin embargo, DroneKit ya no está en mantenimiento y se han observado problemas de compatibilidad con las versiones más actuales de los interpretes de Python. Esta ha sido la motivación principal para iniciar el desarrollo de una librería alternativa, junto con la intención de que la nueva librería sea más simple de usar y orientada a las necesidades del DEE.

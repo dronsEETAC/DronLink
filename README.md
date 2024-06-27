@@ -1,8 +1,8 @@
 # La librería DronLink
 DronLink es una librería que pretende facilitar el desarrollo de aplicaciones de control del dron. Ofrece una amplia variedad de funcionalidades y se está diseñando con la mente puesta en las posibles necesidades del Drone Engineering Ecosystem (DEE).    
 En este repositorio puede encontrarse el código de la librería y varias aplicaciones que demuestran su uso, en una variedad de contextos. Es importante tener presente que DronLink está en desarrollo y, por tanto, no exenta de errores.
-## Alternativa a DroneKit
-Los primeros módulos del DEE se implementaron usando la librería DroneKit, que es la más usada y documentada. Sin embargo, DroneKit ya no está en mantenimiento y se han observado problemas de compatibilidad con las versiones más actuales de los interpretes de Python. Esta ha sido la motivación principal para iniciar el desarrollo de una librería alternativa, junto con la intención de que la nueva librería sea más simple de usar o orientada a las necesidades del DEE.
+## 1. Alternativa a DroneKit
+Los primeros módulos del DEE se implementaron usando la librería DroneKit, que es la más usada y documentada. Sin embargo, DroneKit ya no está en mantenimiento y se han observado problemas de compatibilidad con las versiones más actuales de los interpretes de Python. Esta ha sido la motivación principal para iniciar el desarrollo de una librería alternativa, junto con la intención de que la nueva librería sea más simple de usar y orientada a las necesidades del DEE.
 No obstante, DroneKit es operativa y existe mucha documentación. Además, existen soluciones sencillas para resolver algunos de los problemas de compatibilidad encontrados. En particular, el siguiente gif muestra cómo resolver el primer problema de compatibilidad que se observa al intentar usar DroneKit con versiones actuales del intérprete de Python.
 <img src="https://github.com/dronsEETAC/Taller-de-Drones-TelecoRenta/assets/100842082/841e7a62-ef19-4841-be70-e6079cf7e9c4" width="400" height="200">
 ## 2. Modelo de programación de DronLink

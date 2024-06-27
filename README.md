@@ -155,20 +155,28 @@ VIDEO
 Los tres demostradores trabajan con el simulador SITL. Para trabajar con el dron real únicamente se necesita cambiar el string de conexión que se le pasa como parámetro al método connect.     
     
 ### Dashboard con comunicación directa
-Se trata de una aplicación que presenta al usuario una interfaz basada en botones que permiten realizar las operaciones básicas de control del dron (conectar, armar, despegar, navegar en diferentes direcciones, aterrizar, etc.). Utiliza el modo de comunicación directa. Por tanto, es la propia aplicación la que usa la clase Dron para comunicarse con el dron a través de la radio de telemetría.       
+Se trata de una aplicación que presenta al usuario una interfaz basada en botones que permiten realizar las operaciones básicas de control del dron (conectar, armar, despegar, navegar en diferentes direcciones, aterrizar, etc.). Utiliza el modo de comunicación directa. Por tanto, es la propia aplicación la que usa la clase Dron para comunicarse con el dron a través de la radio de telemetría.      
+   
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.   
+   
 Es importante tener presente que para poner en marcha esta aplicación es necesario instalar la librería _pymavlink_, que es la que necesita DronLink (en realidad, cualquier aplicación que use DronLink necesita la instalacion previa de esa librería).   
-
+  
 ### Dashboard con comunicación global
 Esta aplicación usa el modo de comunicación global. Por tanto, se comunica a través de un bróker MQTT con un servicio de control del dron (AutopilotService), que es quién realmente se comunica con el dron. En un entorno de producción, trabajando con el dron real (y no con el simulador, como es el caso), el AutopilotService se ejecutaría a bordo del dron (por ejemplo, en una Raspberry Pi) o en el propio portátil (que estaría conectado al dron por la radio de telemetría), de manera que el AutopilotService podría aceptar peticiones también de otras aplicaciones externas (por ejemplo, una WebApp que se ejecuta en un teléfono móvil).      
+  
 La aplicación también presenta una interfaz con algunos botones. Además, muestra un mapa en el que podemos seguir los movimientos del dron. Junto con las operaciones más básicas, se puede crear un plan de vuelo (indicando los waypoints sobre el propio mapa) y ejecutarlo.     
+ 
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
+ 
 Para ejecutar esta aplicación será necesario instalar las librerías _tkintermapview_ y _pillow_, que permiten usar mapas y procesar imágenes.    
 
 ### Dashboard para enjambre de drones
-Esta aplicación permite controlar un enjambre de hasta 9 drones (para lo cual hay que poner en marcha desde Mission Planner un enjambre de simuladores SITL). La aplicación permite elegir el número de drones del enjambre y seleccionar cuáles de los drones deben ejecutar las ordenes indicadas. Además, muestra en un mapa la posición de cada uno de los drones del enjambre. También es posible dirigir a los drones seleccionados a un punto señalado sobre el mapa.      
+Esta aplicación permite controlar un enjambre de hasta 9 drones (para lo cual hay que poner en marcha desde Mission Planner un enjambre de simuladores SITL). La aplicación permite elegir el número de drones del enjambre y seleccionar cuáles de los drones deben ejecutar las ordenes indicadas. Además, muestra en un mapa la posición de cada uno de los drones del enjambre. También es posible dirigir a los drones seleccionados a un punto señalado sobre el mapa.
+ 
 Esta aplicación también usa el modo de comunicación directo. Para ello, necesita definir una lista de objetos de la clase Dron, cada uno de ellos para controlar uno de los drones. En el caso de llevar esta aplicación a un entorno de producción, sería necesario conectar al portátil tantas radios de telemetría como drones tuviera el enjambre.     
+ 
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
+ 
 Esta aplicación también necesita las librerías _tkintermapview_ y _pillow_.    
 
 

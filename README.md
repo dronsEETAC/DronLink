@@ -103,11 +103,11 @@ def informar (param):
 dron.takeOff (8, blocking = False, callback= informar, params= ‘En el aire a 8 metros de altura’)
 print (‘Hago otras cosas mientras se realiza el despegue. Ya me avisarán’)
 ```
-En este caso en la llamada no bloqueante añadimos un parámetro que se le pasará al callback en 
-en el momento de activarlo. De esta forma, la misma función informar se puede usar  como callback
+En este caso, en la llamada no bloqueante añadimos un parámetro que se le pasará al callback en 
+en el momento de activarlo. De esta forma, la misma función _informar_ se puede usar  como callback
 para otras llamadas no bloqueantes. Por ejemplo, podríamos llamar de forma no bloqueante al método 
-para aterrizar y pasar le como callback también la función informar, pero ahora con elm  parámetro
-'Ya estoy en tierra', que es lo que escribiría en consola la función  informar en el momento del aterrizaje.
+para aterrizar y pasarle como callback también la función _informar_, pero ahora con el  parámetro
+'Ya estoy en tierra', que es lo que escribiría en consola la función  _informar_ en el momento del aterrizaje.
 
 _Ejemplo 5_
 

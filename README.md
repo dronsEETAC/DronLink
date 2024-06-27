@@ -138,8 +138,10 @@ La modalidad no bloqueante en las llamadas a la librería es especialmente útil
 queremos interactuar con el dron mediante una interfaz gráfica**. Por ejemplo, no vamos a
 querer que se bloquee la interfaz mientras el dron despega. Seguramente querremos seguir
 procesando los datos de telemetría mientras el dron despega, para mostrar al usuario, por
-ejemplo, la altura del dron en todo momento.
-En esta lista de distribución pueden encontrase varios vídeos que muestran estos conceptos en acción. Es importante tener en cuenta que en el momento de grabar esos vídeos la librería tenía el nombre provisiones de DronLib, y no DronLink, que es el nombre actual. Incluso es posible que alguno de los métodos que se usan en los vídeos hayan cambiado. En la siguiente sección hay una descripción detallada de los métodos de la versión actual.
+ejemplo, la altura del dron en todo momento.     
+   
+En esta lista de distribución pueden encontrase varios vídeos que muestran estos conceptos en acción. Es importante tener en cuenta que en el momento de grabar esos vídeos la librería tenía el nombre provisional de DronLib, y no DronLink, que es el nombre actual. Incluso es posible que alguno de los métodos que se usan en los vídeos hayan cambiado. En la siguiente sección hay una descripción detallada de los métodos de la versión actual.    
+VIDEOS
 
 ## 3.Métodos de la clase Dron
 En la tabla que se indica se describen los métodos de la clase Dron que se usan en este taller. En

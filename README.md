@@ -165,9 +165,8 @@ Se trata de una aplicación que presenta al usuario una interfaz basada en boton
    
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.   
 
-[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DryezfzIUBrE)](https://www.youtube.com/watch?v=ryezfzIUBrE)
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D3HwjL96IGyo)](https://www.youtube.com/watch?v=3HwjL96IGyo)
 
-   
 Es importante tener presente que para poner en marcha esta aplicación es necesario instalar la librería _pymavlink_, que es la que necesita DronLink (en realidad, cualquier aplicación que use DronLink necesita la instalacion previa de esa librería).   
   
 ### Dashboard con comunicación global
@@ -177,8 +176,7 @@ La aplicación también presenta una interfaz con algunos botones. Además, mues
  
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
 
-[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DryezfzIUBrE)](https://www.youtube.com/watch?v=ryezfzIUBrE)
-
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUrnyuUyTqhk)](https://www.youtube.com/watch?v=UrnyuUyTqhk)
  
 Para ejecutar esta aplicación será necesario instalar las librerías _tkintermapview_, _pillow_ y _paho_mqtt_ (ATENCIÓN: version 1.6.1), que permiten usar mapas y procesar imágenes.    
 
@@ -189,9 +187,8 @@ Esta aplicación también usa el modo de comunicación directo. Para ello, neces
  
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
 
-[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DryezfzIUBrE)](https://www.youtube.com/watch?v=ryezfzIUBrE)
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dn9irtWyzfLc)](https://www.youtube.com/watch?v=n9irtWyzfLc)
 
- 
 Esta aplicación también necesita las librerías _tkintermapview_ y _pillow_.    
 
 

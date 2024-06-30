@@ -147,7 +147,7 @@ VIDEOS
 ## 3. Métodos de la clase Dron
 En la tabla que se enlaza más abajo se describen los métodos de la clase Dron de la versión actual de DronLink.
      
-[Métodos de la clase Dron](tabla_dronLib.pdf)   
+[Métodos de la clase Dron](dronLink/docs/tabla_dronLink.pdf)   
 
 ## 4. Demostradores
 En este repositorio se proporcionan tres aplicaciones que demuestran el uso de la librería DronLink en diferentes contextos (modo de comunicación directo, modo de comunicación global y enjambre de drones). Puede ser conveniente ver antes este video que aclara la cuestión de los modos de comunicación tierra-dron.      

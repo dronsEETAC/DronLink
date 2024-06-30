@@ -169,7 +169,7 @@ La aplicación también presenta una interfaz con algunos botones. Además, mues
  
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
  
-Para ejecutar esta aplicación será necesario instalar las librerías _tkintermapview_ y _pillow_, que permiten usar mapas y procesar imágenes.    
+Para ejecutar esta aplicación será necesario instalar las librerías _tkintermapview_, _pillow_ y _paho_mqtt_ (ATENCIÓN: version 1.6.1), que permiten usar mapas y procesar imágenes.    
 
 ### Dashboard para enjambre de drones
 Esta aplicación permite controlar un enjambre de hasta 9 drones (para lo cual hay que poner en marcha desde Mission Planner un enjambre de simuladores SITL). La aplicación permite elegir el número de drones del enjambre y seleccionar cuáles de los drones deben ejecutar las ordenes indicadas. Además, muestra en un mapa la posición de cada uno de los drones del enjambre. También es posible dirigir a los drones seleccionados a un punto señalado sobre el mapa.

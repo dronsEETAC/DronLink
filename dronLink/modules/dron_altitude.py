@@ -14,6 +14,7 @@ def _change_altitude(self, altitude, callback=None, params = None):
                                                                        int(self.lon * 10 ** 7), altitude, 0, 0, 0, 0, 0,
                                                                        0, 0,
                                                                        0))
+    # espero hasta que el dron haya alcanzado la altura indicada
     while True:
         msg = self.vehicle.recv_match(type='GLOBAL_POSITION_INT', blocking=True, timeout=3)
         if msg:
@@ -23,7 +24,7 @@ def _change_altitude(self, altitude, callback=None, params = None):
                 break
             time.sleep(0.1)
 
-    self.state = "flying"
+
     if callback != None:
         if self.id == None:
             if params == None:
@@ -40,9 +41,13 @@ def _change_altitude(self, altitude, callback=None, params = None):
 
 
 def change_altitude(self, altitude, blocking=False, callback=None, params = None):
-    if blocking:
-        self._change_altitude(self)
+    # solo puedo cambiar la altura si estoy volando
+    if self.state == "flying":
+        if blocking:
+            self._change_altitude(self)
+        else:
+            changeAltThread = threading.Thread(target=self._change_altitude, args=[altitude, callback, params])
+            changeAltThread.start()
+        return True
     else:
-        changeAltThread = threading.Thread(target=self._change_altitude, args=[altitude, callback, params])
-        print("Changing altitude thread started")
-        changeAltThread.start()
+        return False

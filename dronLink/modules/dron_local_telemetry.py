@@ -14,7 +14,7 @@ def _send_local_telemetry_info(self, process_local_telemetry_info):
         if msg:
             # La posición viene en formato NED, es decir:
             #   msg.x indica el desplazamiento hacia el norte desde el home (o hacia el sur
-            #   si es un valor negatigo
+            #   si es un valor negativo
             #   msg.y es el desplazamiento hacia el Este (u oeste si el número es negativo)
             #   msg.z es el desplazamiento hacia abajo (down) o hacia arriga si es negativo
 

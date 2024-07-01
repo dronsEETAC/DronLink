@@ -1,6 +1,5 @@
 import tkinter as tk
 from dronLink.Dron import Dron
-from tkinter import messagebox
 
 
 

@@ -12,7 +12,7 @@ def _handle_heartbeat(self):
         if msg:
             if msg.base_mode == 89 and self.state == 'armed':
                 self.state = 'connected'
-        time.sleep (0.25)
+        time.sleep (1)
 
 
 

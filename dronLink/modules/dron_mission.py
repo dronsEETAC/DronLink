@@ -48,14 +48,14 @@ def _uploadMission (self, mission, callback=None, params = None):
         self.vehicle.target_component,
         mavutil.mavlink.MAV_CMD_GET_HOME_POSITION,
         0, 0, 0, 0, 0, 0, 0, 0)
-
+    print ('voy a pedir el home')
     msg = self.vehicle.recv_match(type='HOME_POSITION', blocking=True)
     msg = msg.to_dict()
     lat = msg['latitude']
     lon = msg['longitude']
     alt = msg['altitude']
 
-
+    print ('ya tengo el home')
 
     # añadimos este primer waypoint a la mision
     wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(

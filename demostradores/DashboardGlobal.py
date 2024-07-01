@@ -11,13 +11,9 @@ from PIL import Image, ImageTk
 def restart ():
     time.sleep (5)
 
-    armBtn['text'] = 'Armar'
-    armBtn['fg'] = 'black'
-    armBtn['bg'] = 'dark orange'
-
-    takeOffBtn['text'] = 'Despegar'
-    takeOffBtn['fg'] = 'black'
-    takeOffBtn['bg'] = 'dark orange'
+    arm_takeOffBtn['text'] = 'Armar'
+    arm_takeOffBtn['fg'] = 'black'
+    arm_takeOffBtn['bg'] = 'dark orange'
 
     landBtn['text'] = 'Aterrizar'
     landBtn['fg'] = 'black'
@@ -32,8 +28,6 @@ def restart ():
 
 # ejecutaré esto cada vez que llegue un paquete de telemetría
 def showTelemetryInfo (telemetry_info):
-    '''global heading, altitude, groundSpeed, state
-    global altShowLbl, headingShowLbl, speedShowLbl'''
     global dronIcon
     global home_lat, home_lon
     # recupero la posición en la que está el dron
@@ -57,12 +51,7 @@ def showTelemetryInfo (telemetry_info):
     headingShowLbl['text'] =  round(telemetry_info['heading'],2)
     speedShowLbl['text'] = round (telemetry_info['groundSpeed'],2)
 
-    # compruebo si el estado es 'connected' para poner en naranja el boton de armar
-    # el dron de desarma automáticamente si, después de armar, pasa un tiempo sin despegar
-    if telemetry_info['state'] == 'connected':
-        armBtn['text'] = 'Armar'
-        armBtn['fg'] = 'black'
-        armBtn['bg'] = 'dark orange'
+
 
 
 def connect ():
@@ -74,24 +63,18 @@ def connect ():
 
 
 
-def arm ():
-    client.publish('interfazGlobal/autopilotServiceDemo/arm')
-    armBtn['text'] = 'armando...'
-    armBtn['fg'] = 'black'
-    armBtn['bg'] = 'yellow'
+def arm_takeOff ():
+    client.publish('interfazGlobal/autopilotServiceDemo/arm_takeOff')
+    arm_takeOffBtn['text'] = 'despegando...'
+    arm_takeOffBtn['fg'] = 'black'
+    arm_takeOffBtn['bg'] = 'yellow'
 
 def inTheAir ():
     # ya ha alcanzado la altura de despegue
-    takeOffBtn['text'] = 'En el aire'
-    takeOffBtn['fg'] = 'white'
-    takeOffBtn['bg'] = 'green'
+    arm_takeOffBtn['text'] = 'En el aire'
+    arm_takeOffBtn['fg'] = 'white'
+    arm_takeOffBtn['bg'] = 'green'
 
-
-def takeoff ():
-    client.publish('interfazGlobal/autopilotServiceDemo/takeOff')
-    takeOffBtn['text'] = 'despegando...'
-    takeOffBtn['fg'] = 'black'
-    takeOffBtn['bg'] = 'yellow'
 
 def onEarth (op):
     # estamos en tierra
@@ -156,14 +139,11 @@ def on_message(client, userdata, message):
         connectBtn['bg'] = 'green'
         # una vez conectado pido que envíe datos de telemetría
         client.publish('interfazGlobal/autopilotServiceDemo/startTelemetry')
-    if message.topic == 'autopilotServiceDemo/interfazGlobal/armed':
-        armBtn['text'] = 'Armado'
-        armBtn['fg'] = 'white'
-        armBtn['bg'] = 'green'
+
     if message.topic == 'autopilotServiceDemo/interfazGlobal/flying':
-        takeOffBtn['text'] = 'En el aire'
-        takeOffBtn['fg'] = 'white'
-        takeOffBtn['bg'] = 'green'
+        arm_takeOffBtn['text'] = 'En el aire'
+        arm_takeOffBtn['fg'] = 'white'
+        arm_takeOffBtn['bg'] = 'green'
 
     if message.topic == 'autopilotServiceDemo/interfazGlobal/landed':
         landBtn['text'] = 'En tierra'
@@ -256,7 +236,7 @@ def uploadMission ():
 def crear_ventana():
     global client
     global  altShowLbl, headingShowLbl,  speedSldr, gradesSldr, speedShowLbl
-    global connectBtn, armBtn, takeOffBtn, landBtn, RTLBtn, uploadMissionBtn, runMissionBtn
+    global connectBtn, arm_takeOffBtn, landBtn, RTLBtn, uploadMissionBtn, runMissionBtn
     global previousBtn # aqui guardaré el ultimo boton de navegación clicado
     global dronPicture, map_widget, dronIcon, wpPicture, homePicture
     global waypoints
@@ -266,14 +246,6 @@ def crear_ventana():
     # me conecto al broker publico y gratuito
     broker_address = "broker.hivemq.com"
     broker_port = 8000
-
-    '''# me conecto al broker privado 
-    broker_address = "dronseetac.upc.edu"
-    broker_port = 8000
-    client.username_pw_set(
-     'dronsEETAC', 'mimara1456.'
-    )
-    '''
 
     client.on_message = on_message
     client.on_connect = on_connect
@@ -304,8 +276,7 @@ def crear_ventana():
     controlFrame.rowconfigure(3, weight=1)
     controlFrame.rowconfigure(4, weight=1)
     controlFrame.rowconfigure(5, weight=1)
-    controlFrame.rowconfigure(6, weight=1)
-    controlFrame.rowconfigure(7, weight=1)
+
 
     controlFrame.columnconfigure(0, weight=1)
     controlFrame.columnconfigure(1, weight=1)
@@ -339,23 +310,19 @@ def crear_ventana():
     runMissionBtn.grid(row=1, column=1, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
 
     # ahora tenemos más botones para operaciones básicas
-    armBtn = tk.Button(controlFrame, text="Armar", bg="dark orange", command=arm)
-    armBtn.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
-
-    takeOffBtn = tk.Button(controlFrame, text="Despegar", bg="dark orange", command=takeoff)
-    takeOffBtn.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
-
+    arm_takeOffBtn = tk.Button(controlFrame, text="Armar y despegar", bg="dark orange", command=arm_takeOff)
+    arm_takeOffBtn.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
 
     # los dos siguientes también están en la misma fila
     landBtn = tk.Button(controlFrame, text="Aterrizar", bg="dark orange", command=land)
-    landBtn.grid(row=4, column=0, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+    landBtn.grid(row=3, column=0, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
 
     RTLBtn = tk.Button(controlFrame, text="RTL", bg="dark orange", command=RTL)
-    RTLBtn.grid(row=4, column=1, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+    RTLBtn.grid(row=3, column=1, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
 
     # este es el frame para la navegación. Pequeña matriz de 3 x 3 botones
     navFrame = tk.LabelFrame (controlFrame, text = "Navegación")
-    navFrame.grid(row=5, column=0, columnspan = 2, padx=50, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+    navFrame.grid(row=4, column=0, columnspan = 2, padx=50, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
 
     navFrame.rowconfigure(0, weight=1)
     navFrame.rowconfigure(1, weight=1)
@@ -406,7 +373,7 @@ def crear_ventana():
     # Este es el frame para mostrar los datos de telemetría
     # Contiene etiquetas para informar de qué datos son y los valores. Solo nos interesan 3 datos de telemetría
     telemetryFrame = tk.LabelFrame(controlFrame, text="Telemetría")
-    telemetryFrame.grid(row=6, column=0, columnspan=2, padx=10, pady=10, sticky=tk.N + tk.S + tk.E + tk.W)
+    telemetryFrame.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky=tk.N + tk.S + tk.E + tk.W)
 
     telemetryFrame.rowconfigure(0, weight=1)
     telemetryFrame.rowconfigure(1, weight=1)

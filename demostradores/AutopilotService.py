@@ -34,15 +34,12 @@ def on_message(cli, userdata, message):
         dron.connect(connection_string, baud, freq=10)
         publish_event('connected')
 
-    if command == 'arm':
+    if command == 'arm_takeOff':
         if dron.state == 'connected':
+            print ('vamos a armar')
             dron.arm()
-            publish_event('armed')
-
-    if command == 'takeOff':
-        if dron.state == 'armed':
-            # operación no bloqueante. Cuando acabe publicará el evento correspondiente
-            dron.takeOff (5, blocking=False,  callback=publish_event, params='flying')
+            print ('vamos a despegar')
+            dron.takeOff(5, blocking=False, callback=publish_event, params='flying')
 
     if command == 'go':
         if dron.state == 'flying':
@@ -92,14 +89,6 @@ client = mqtt.Client("autopilotServiceDemo", transport="websockets")
 # me conecto al broker publico y gratuito
 broker_address = "broker.hivemq.com"
 broker_port = 8000
-
-'''# me conecto al broker privado 
-broker_address = "dronseetac.upc.edu"
-broker_port = 8000
-client.username_pw_set(
- 'dronsEETAC', 'mimara1456.'
-)
-'''
 
 client.on_message = on_message
 client.on_connect = on_connect

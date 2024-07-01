@@ -142,16 +142,21 @@ procesando los datos de telemetría mientras el dron despega, para mostrar al us
 ejemplo, la altura del dron en todo momento.     
    
 En esta lista de distribución pueden encontrase varios vídeos que muestran estos conceptos en acción. Es importante tener en cuenta que en el momento de grabar esos vídeos la librería tenía el nombre provisional de DronLib, y no DronLink, que es el nombre actual. Incluso es posible que alguno de los métodos que se usan en los vídeos hayan cambiado. En la siguiente sección hay una descripción detallada de los métodos de la versión actual.    
-VIDEOS
+
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DryezfzIUBrE)](https://www.youtube.com/playlist?list=PLyAtSQhMsD4oc0kzDygK73o3wkhfJbiZs)
+
+
 
 ## 3. Métodos de la clase Dron
 En la tabla que se enlaza más abajo se describen los métodos de la clase Dron de la versión actual de DronLink.
      
-[Métodos de la clase Dron](tabla_dronLib.pdf)   
+[Métodos de la clase Dron](dronLink/docs/tabla_dronLink.pdf)   
 
 ## 4. Demostradores
 En este repositorio se proporcionan tres aplicaciones que demuestran el uso de la librería DronLink en diferentes contextos (modo de comunicación directo, modo de comunicación global y enjambre de drones). Puede ser conveniente ver antes este video que aclara la cuestión de los modos de comunicación tierra-dron.      
-VIDEO
+
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfOmVdmOW8ag)](https://www.youtube.com/watch?v=fOmVdmOW8ag)
+
 
 Los tres demostradores trabajan con el simulador SITL. Para trabajar con el dron real únicamente se necesita cambiar el string de conexión que se le pasa como parámetro al método connect.     
     
@@ -159,7 +164,9 @@ Los tres demostradores trabajan con el simulador SITL. Para trabajar con el dron
 Se trata de una aplicación que presenta al usuario una interfaz basada en botones que permiten realizar las operaciones básicas de control del dron (conectar, armar, despegar, navegar en diferentes direcciones, aterrizar, etc.). Utiliza el modo de comunicación directa. Por tanto, es la propia aplicación la que usa la clase Dron para comunicarse con el dron a través de la radio de telemetría.      
    
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.   
-   
+
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D3HwjL96IGyo)](https://www.youtube.com/watch?v=3HwjL96IGyo)
+
 Es importante tener presente que para poner en marcha esta aplicación es necesario instalar la librería _pymavlink_, que es la que necesita DronLink (en realidad, cualquier aplicación que use DronLink necesita la instalacion previa de esa librería).   
   
 ### Dashboard con comunicación global
@@ -168,8 +175,10 @@ Esta aplicación usa el modo de comunicación global. Por tanto, se comunica a t
 La aplicación también presenta una interfaz con algunos botones. Además, muestra un mapa en el que podemos seguir los movimientos del dron. Junto con las operaciones más básicas, se puede crear un plan de vuelo (indicando los waypoints sobre el propio mapa) y ejecutarlo.     
  
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
+
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUrnyuUyTqhk)](https://www.youtube.com/watch?v=UrnyuUyTqhk)
  
-Para ejecutar esta aplicación será necesario instalar las librerías _tkintermapview_ y _pillow_, que permiten usar mapas y procesar imágenes.    
+Para ejecutar esta aplicación será necesario instalar las librerías _tkintermapview_, _pillow_ y _paho_mqtt_ (ATENCIÓN: version 1.6.1), que permiten usar mapas y procesar imágenes.    
 
 ### Dashboard para enjambre de drones
 Esta aplicación permite controlar un enjambre de hasta 9 drones (para lo cual hay que poner en marcha desde Mission Planner un enjambre de simuladores SITL). La aplicación permite elegir el número de drones del enjambre y seleccionar cuáles de los drones deben ejecutar las ordenes indicadas. Además, muestra en un mapa la posición de cada uno de los drones del enjambre. También es posible dirigir a los drones seleccionados a un punto señalado sobre el mapa.
@@ -177,7 +186,9 @@ Esta aplicación permite controlar un enjambre de hasta 9 drones (para lo cual h
 Esta aplicación también usa el modo de comunicación directo. Para ello, necesita definir una lista de objetos de la clase Dron, cada uno de ellos para controlar uno de los drones. En el caso de llevar esta aplicación a un entorno de producción, sería necesario conectar al portátil tantas radios de telemetría como drones tuviera el enjambre.     
  
 En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
- 
+
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dn9irtWyzfLc)](https://www.youtube.com/watch?v=n9irtWyzfLc)
+
 Esta aplicación también necesita las librerías _tkintermapview_ y _pillow_.    
 
 

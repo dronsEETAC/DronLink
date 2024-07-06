@@ -47,7 +47,7 @@ class Dron(object):
     from dronLink.modules.dron_nav import _prepare_command, go, _startGo, _stopGo, _goingTread, changeHeading, fixHeading, unfixHeading, changeNavSpeed
     from dronLink.modules.dron_goto import goto, _goto, _distanceToDestinationInMeters
     from dronLink.modules.dron_parameters import getParams, _getParams, setParams, _setParams
-    from dronLink.modules.dron_geofence import setGEOFence, _setGEOFence, getGEOFence, _getGEOFence
+    from dronLink.modules.dron_geofence import  setScenario, _setScenario, getScenario, _getScenario, _buildScenario
     from dronLink.modules.dron_telemetry import send_telemetry_info, _send_telemetry_info, stop_sending_telemetry_info
 
     from dronLink.modules.dron_local_telemetry import send_local_telemetry_info, _send_local_telemetry_info, stop_sending_local_telemetry_info

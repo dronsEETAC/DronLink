@@ -23,7 +23,6 @@ def connect ():
     # fijamos la velocidad por defecto en el slider
     speedSldr.set(1)
 
-
 def arm ():
     global dron
     dron.arm()

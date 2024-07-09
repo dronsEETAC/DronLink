@@ -166,7 +166,6 @@ def _executeMission (self, callback=None, params = None):
         if msg:
             msg = msg.to_dict()
             alt = float(msg['relative_alt'] / 1000)
-            print(alt)
             if alt < 0.5:
                 break
         time.sleep(0.1)

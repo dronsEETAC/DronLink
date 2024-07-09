@@ -28,7 +28,7 @@ def _buildScenario (self, fencePoints):
         # es un circulo
         fence = {
             'type': 'circle',
-            'radious': item.param1,
+            'radius': item.param1,
             'lat':  float(item.x / 10 ** 7),
             'lon': float(item.y / 10 ** 7)
         }
@@ -64,7 +64,7 @@ def _buildScenario (self, fencePoints):
                 # es un circulo
                 fence = {
                     'type': 'circle',
-                    'radious': item.param1,
+                    'radius': item.param1,
                     'lat': float(item.x / 10 ** 7),
                     'lon': float(item.y / 10 ** 7)
                 }
@@ -129,7 +129,7 @@ def _setScenario(self, scenario, callback=None, params = None):
     El resto de elementos de la lista son fences de exclusión que representan obstaculos dentro del fence de inclusión,
     que el dron no puede sobrevolar. El escenario debe tener un fence de inclusión (solo uno y es el primer elemento
     de la lista) y un número variable de fences de exclusión, que puede ser 0.
-    Un fence (tanto de inclusión como de exclusión) puede ser de tipo 'pologon' o de tipo 'circle'. En el primer caso
+    Un fence (tanto de inclusión como de exclusión) puede ser de tipo 'polygon' o de tipo 'circle'. En el primer caso
     el fence se caracteriza por un número variable de waypoints (lat, lon). Deben ser al menos 3 puesto que representan
     los vértices del poligono. Si el fence es de tipo 'circle' debe especificarse las coordenadas (lat, lon) del centro del
     círculo y el radio en metros.
@@ -162,7 +162,7 @@ def _setScenario(self, scenario, callback=None, params = None):
             },
             {
                 'type': 'circle',
-                'radious': 2,
+                'radius': 2,
                 'lat': 41.2763430,
                 'lon': 1.9883953
             }
@@ -211,7 +211,7 @@ def _setScenario(self, scenario, callback=None, params = None):
             mavutil.mavlink.MAV_CMD_NAV_FENCE_CIRCLE_EXCLUSION,  # command
             0,  # current
             0,  # autocontinue
-            inclusionFence ['radious'],  # radio del circulo,
+            inclusionFence ['radius'],  # radio del circulo,
             0.0,  # param2,
             0.0,  # param3
             0.0,  # param4
@@ -256,7 +256,7 @@ def _setScenario(self, scenario, callback=None, params = None):
                     mavutil.mavlink.MAV_CMD_NAV_FENCE_CIRCLE_EXCLUSION,  # command
                     0,  # current
                     0,  # autocontinue
-                    obstacle['radious'],  # radio del circulo,
+                    obstacle['radius'],  # radio del circulo,
                     0.0,  # param2,
                     0.0,  # param3
                     0.0,  # param4

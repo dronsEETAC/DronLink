@@ -7,11 +7,21 @@ from pymavlink import mavutil
 ''' Esta función sirve exclusivamente para detectar cuándo el dron se desarma porque 
 ha pasado mucho tiempo desde que se armó sin despegar'''
 def _handle_heartbeat(self):
+    '''self.vehicle.mav.command_long_send(
+        self.vehicle.target_system, self.vehicle.target_component,
+        mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL, 0,
+        mavutil.mavlink.MAVLINK_MSG_ID_FENCE_STATUS,
+        1e6 / self.frequency,  # frecuencia con la que queremos paquetes de telemetría
+        0, 0, 0, 0,  # Unused parameters
+        0
+    )'''
+
     while self.state != 'disconnected':
         msg = self.vehicle.recv_match(type='HEARTBEAT', blocking=False)
         if msg:
             if msg.base_mode == 89 and self.state == 'armed':
                 self.state = 'connected'
+
         time.sleep (1)
 
 

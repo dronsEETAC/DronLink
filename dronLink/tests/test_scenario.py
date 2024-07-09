@@ -44,7 +44,7 @@ scenario = [
      },
      {
          'type': 'circle',
-         'radious': 2,
+         'radius': 2,
          'lat': 41.2763430,
          'lon': 1.9883953
      }

@@ -153,7 +153,7 @@ En la tabla que se enlaza más abajo se describen los métodos de la clase Dron 
 [Métodos de la clase Dron](dronLink/docs/tabla_dronLink.pdf)   
 
 ## 4. Demostradores
-En este repositorio se proporcionan tres aplicaciones que demuestran el uso de la librería DronLink en diferentes contextos (modo de comunicación directo, modo de comunicación global y enjambre de drones). Puede ser conveniente ver antes este video que aclara la cuestión de los modos de comunicación tierra-dron.      
+En este repositorio se proporcionan cuatro aplicaciones que demuestran el uso de la librería DronLink en diferentes contextos (modo de comunicación directo, modo de comunicación global y enjambre de drones). Puede ser conveniente ver antes este video que aclara la cuestión de los modos de comunicación tierra-dron.      
 
 [![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfOmVdmOW8ag)](https://www.youtube.com/watch?v=fOmVdmOW8ag)
 
@@ -191,4 +191,12 @@ En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el
 
 Esta aplicación también necesita las librerías _tkintermapview_ y _pillow_.    
 
+### Dashboard para gestionar escenarios
+Esta aplicación permite diseñar y cargar en el dron escenarios. Un escenario no es más que un área denominada geofence de inclusión (de la que el dron no va a poder salir) y un conjunto de áreas denominadas geofences de exclusión (en las que el dron no puede entrar) y que están dentro del geofence de inclusión. Con estos elementos se pueden crear circuitos para el dron, que llamamos escenarios.    
+
+En estos vídeos puede verse la aplicación en acción y el aspecto que tiene el código.     
+
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNZRXXUbdXQ0)](https://www.youtube.com/watch?v=NZRXXUbdXQ0)     
+
+La aplicación usa el modo de comunicación directo y pone a prueba los métodos _setScenario_ y _getScenario_ de la librería DronLink. Requiere la instalación de las librerías _geographiclib_, _geopy_, _pyscreenshot_ y _puautogui_.    
 

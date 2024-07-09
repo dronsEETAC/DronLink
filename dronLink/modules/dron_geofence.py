@@ -106,6 +106,7 @@ def _getScenario(self, callback=None):
 
 
     scenario = self._buildScenario (fencePoints)
+
     if callback != None:
         if self.id == None:
             callback(scenario)

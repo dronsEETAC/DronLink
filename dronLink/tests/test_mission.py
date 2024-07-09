@@ -5,8 +5,14 @@ from dronLink.Dron import Dron
 def informar ():
     global dron
     print ('Ya he cargado la misión')
-    dron.executeMission()
-    print ('se acabó')
+    mission = dron.getMission()
+    if mission:
+        print ('esta es la missión que he descargado: ')
+        print (json.dumps(mission, indent = 1))
+        print ('Ahora la voy a ejecutar')
+        dron.executeMission()
+    else:
+        print ('No hay mision')
 
 
 

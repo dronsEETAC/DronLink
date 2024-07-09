@@ -4,7 +4,52 @@ import threading
 import time
 from pymavlink import mavutil
 
+from pymavlink import mavutil
 
+def _getMission (self, callback=None, params = None):
+    mission = None
+    # Solicitar la misión (waypoints) al autopiloto
+    self.vehicle.mav.mission_request_list_send( self.vehicle.target_system,  self.vehicle.target_component)
+    while True:
+        # Esperar los mensajes
+        msg =  self.vehicle.recv_match(blocking=True)
+
+        # Verificar el tipo de mensaje recibido
+        if msg.get_type() == 'MISSION_COUNT':
+            # Número de waypoints
+            count = msg.count
+            print ('count: ', count)
+            if count < 2:
+                # no hay misión
+                return None
+            # Solicitar cada waypoint
+            for i in range(count):
+                self.vehicle.mav.mission_request_int_send( self.vehicle.target_system,  self.vehicle.target_component, i)
+
+        elif msg.get_type() == 'MISSION_ITEM_INT':
+            # el mensaje ya trae un waypoint
+            # el que tiene numero de secuencia lo ignoro
+            if msg.seq == 1:
+                # este es el waypoint que indica la altura de despeque
+                mission = {
+                    'takeOffAlt': msg.z,
+                    'waypoints': []
+                }
+            elif msg.seq in range (2, count-1):
+                # estos son los waypoints que hay que volar
+                mission ['waypoints'].append ({'lat':msg.x * 1e-7, 'lon':msg.y * 1e-7, 'alt':msg.z })
+                print ('mission: ', mission)
+            elif msg.seq == count-1:
+                # este waypoint es el RTL
+                break
+    print ('resulado: ', mission)
+    if callback != None:
+        if self.id == None:
+            callback(mission)
+        else:
+            callback(self.id, mission)
+    else:
+        return mission
 
 
 def _uploadMission (self, mission, callback=None, params = None):
@@ -197,3 +242,10 @@ def executeMission(self, blocking=True, callback=None, params = None):
     else:
         missionThread = threading.Thread(target=self._executeMission, args=[callback, params])
         missionThread.start()
+
+def getMission(self, blocking=True, callback=None, params = None):
+    if blocking:
+        return self._getMission()
+    else:
+        getMissionThread = threading.Thread(target=self._getMission, args=[callback, params])
+        getMissionThread.start()

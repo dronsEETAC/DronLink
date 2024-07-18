@@ -43,6 +43,13 @@ def _connect(self, connection_string, baud, callback=None, params=None):
         0, 0, 0, 0,  # Unused parameters
         0
     )
+    # compruebo si el dron está ya en el aire
+    msg = self.vehicle.recv_match(type='GLOBAL_POSITION_INT', blocking=True, timeout=3)
+    if msg:
+        msg = msg.to_dict()
+        self.alt = float(msg['relative_alt'] / 1000)
+        if self.alt > 0.5:
+            self.state = 'flying'
 
     if callback != None:
         if self.id == None:

@@ -32,3 +32,5 @@ mission = {
 }
 
 dron.uploadMission(mission, blocking = False, callback = informar)
+
+

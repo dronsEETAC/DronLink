@@ -16,6 +16,10 @@ def _send_telemetry_info(self, process_telemetry_info):
             self.lon = float(msg['lon'] / 10 ** 7)
             self.alt = float(msg['relative_alt']/1000)
             self.heading = float(msg['hdg'] / 100)
+            # por si volamos el dron con la emisora y no hemos pasado por
+            # los métodos de arm y takeoff
+            if self.state == 'connected' and self.alt > 0.5:
+                self.state = 'flying'
 
             vx =  float(msg['vx'])
             vy = float(msg['vy'])

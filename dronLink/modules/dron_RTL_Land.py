@@ -55,6 +55,7 @@ def Land (self, blocking=True, callback=None, params = None):
         if blocking:
             self._goDown('LAND')
         else:
+            print ('aterrizo el dron ', self.id)
             goingDownThread = threading.Thread(target=self._goDown, args=['LAND', callback, params])
             goingDownThread.start()
         return True

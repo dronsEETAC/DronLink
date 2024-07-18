@@ -7,6 +7,118 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 
 
+
+################# gestion de parametros ******
+class ParameterManager:
+    def __init__(self, window, swarm, pos):
+        self.window = window
+        self.swarm = swarm
+        self.pos = pos
+        self.managementFrame = tk.LabelFrame (window, text = 'Dron '+str(pos+1))
+        self.managementFrame.rowconfigure(0, weight=1)
+        self.managementFrame.rowconfigure(1, weight=1)
+        self.managementFrame.rowconfigure(2, weight=1)
+        self.managementFrame.rowconfigure(3, weight=1)
+        self.managementFrame.rowconfigure(4, weight=1)
+        #if pos == 0:
+        self.managementFrame.rowconfigure(5, weight=1)
+
+        self.managementFrame.columnconfigure(0, weight=1)
+        self.managementFrame.columnconfigure(1, weight=1)
+
+
+        tk.Label (self.managementFrame, text = 'RTL_ALT')\
+            .grid(row=0, column=0, padx=2, pady=2, sticky=tk.N  + tk.E + tk.W)
+
+        self.RTL_ALT_Entry = tk.Entry (self.managementFrame)
+        self.RTL_ALT_Entry.grid(row=0, column=1, padx=2, pady=2, sticky=tk.N  + tk.E + tk.W)
+
+        tk.Label(self.managementFrame, text='FENCE_ENABLE') \
+            .grid(row=1, column=0, padx=2, pady=2, sticky=tk.N  + tk.E + tk.W)
+        self.FENCE_ENABLE_Entry = tk.Entry(self.managementFrame)
+        self.FENCE_ENABLE_Entry.grid(row=1, column=1, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+
+        tk.Label(self.managementFrame, text='FENCE_ACTION') \
+            .grid(row=2, column=0, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+        self.FENCE_ACTION_Entry = tk.Entry(self.managementFrame)
+        self.FENCE_ACTION_Entry.grid(row=2, column=1, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+
+        tk.Label (self.managementFrame, text = 'PILOT_SPEED_UP')\
+            .grid(row=3, column=0, padx=2, pady=2, sticky=tk.N  + tk.E + tk.W)
+        self.PILOT_SPEED_UP_Entry = tk.Entry(self.managementFrame)
+        self.PILOT_SPEED_UP_Entry.grid(row=3, column=1, padx=2, pady=2, sticky=tk.N  + tk.E + tk.W)
+
+        tk.Button (self.managementFrame, text = 'Leer valores',  bg = "dark orange", command = self.read_params)\
+            .grid(row=4, column=0, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+        tk.Button (self.managementFrame, text = 'Enviar valores' , bg = "dark orange", command = self.write_params)\
+            .grid(row=4, column=1, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+        if pos == 0:
+            tk.Button (self.managementFrame, text = 'Copiar valores en todos los drones',  bg = "dark orange", command = self.copy_params)\
+                .grid(row=5, column=0, columnspan=2, padx=2, pady=2, sticky=tk.N  + tk.E + tk.W)
+        else:
+            b= tk.Button(self.managementFrame, state=tk.DISABLED, bd = 0)
+            b.grid(row=5, column=0, columnspan=2, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+
+
+
+
+    def buildFrame (self):
+        return self.managementFrame
+
+    def setManagers (self, managers):
+        self.managers = managers
+    def read_params (self):
+        parameters = [
+            "RTL_ALT",
+            "PILOT_SPEED_UP",
+            "FENCE_ACTION",
+            "FENCE_ENABLE"
+        ]
+        result = self.swarm[self.pos].getParams(parameters)
+        self.RTL_ALT_Entry.delete (0, tk.END)
+        self.RTL_ALT_Entry.insert (0,str(result[0]['RTL_ALT']))
+
+        self.PILOT_SPEED_UP_Entry.delete(0, tk.END)
+        self.PILOT_SPEED_UP_Entry.insert(0,str(result[1]['PILOT_SPEED_UP']))
+
+        self.FENCE_ACTION_Entry.delete(0, tk.END)
+        self.FENCE_ACTION_Entry.insert(0,str(result[2]['FENCE_ACTION']))
+
+        self.FENCE_ENABLE_Entry.delete(0, tk.END)
+        self.FENCE_ENABLE_Entry.insert(0,str(result[3]['FENCE_ENABLE']))
+
+        pass
+    def write_params (self):
+        parameters = [
+            {'ID': "FENCE_ENABLE", 'Value': float(self.FENCE_ENABLE_Entry.get())},
+            {'ID': "FENCE_ACTION", 'Value': float(self.FENCE_ACTION_Entry.get())},
+            {'ID': "PILOT_SPEED_UP", 'Value': float(self.PILOT_SPEED_UP_Entry.get())},
+            {'ID': "RTL_ALT", 'Value': float(self.RTL_ALT_Entry.get())}
+        ]
+        self.swarm[self.pos].setParams(parameters)
+
+
+    def copy_params (self):
+
+        for i in range (1,len(self.swarm)):
+            dronManager = self.managers[i]
+
+            dronManager.RTL_ALT_Entry.delete(0, tk.END)
+            dronManager.RTL_ALT_Entry.insert(0,self.RTL_ALT_Entry.get())
+
+            dronManager.PILOT_SPEED_UP_Entry.delete(0, tk.END)
+            dronManager.PILOT_SPEED_UP_Entry.insert(0, self.PILOT_SPEED_UP_Entry.get())
+
+            dronManager.FENCE_ACTION_Entry.delete(0, tk.END)
+            dronManager.FENCE_ACTION_Entry.insert(0, self.FENCE_ACTION_Entry.get())
+
+            dronManager.FENCE_ENABLE_Entry.delete(0, tk.END)
+            dronManager.FENCE_ENABLE_Entry.insert(0, self.FENCE_ENABLE_Entry.get())
+
+
+
+
+
 # cuando llega un paquete de telemetría se activa esta función en la que se identifica el dron de donde proceden
 # recordemos que los drones están identificados del 0 en adelante
 def processTelemetryInfo (id, telemetry_info):
@@ -30,6 +142,7 @@ def processTelemetryInfo (id, telemetry_info):
         speedShowLbl['text'] = round (telemetry_info['groundSpeed'],2)
 
 
+
 def connect ():
     # me conecto al simulador de cada uno de los drones del enjambre que estan seleccionados
     # los puertos son: 5763, 5773, 5783 y asi en adelante, sumando 10
@@ -48,6 +161,26 @@ def connect ():
             canvasList[i].itemconfig(statusList[i], fill='green')
             # pido que empiece a enviar los daatos de telemetría
             swarm[i].send_telemetry_info(processTelemetryInfo)
+
+    ###################### telemetry management
+    parameterManagementWindow = tk.Tk()
+    parameterManagementWindow.title("Gestión de parámetros")
+    parameterManagementWindow.rowconfigure(0, weight=1)
+    parameterManagementWindow.rowconfigure(1, weight=1)
+    managers = []
+    for i in range(0, len(swarm)):
+        parameterManagementWindow.columnconfigure(i, weight=1)
+        dronManager = ParameterManager (parameterManagementWindow, swarm, i)
+        managers.append(dronManager)
+        dronFrame = dronManager.buildFrame()
+        dronFrame.grid(row=0, column=i, padx=2, pady=2, sticky=tk.N + tk.S + tk.E + tk.W)
+    managers[0].setManagers(managers)
+    tk.Button(parameterManagementWindow, text='Cerrar', bg="dark orange", command=lambda : parameterManagementWindow.destroy()) \
+        .grid(row=1, column=0, columnspan = len(swarm), padx=2, pady=2, sticky=tk.N  + tk.E + tk.W)
+
+    parameterManagementWindow.mainloop()
+
+
 
 def close ():
     # desconecto todos los drones del enjambre y cierro
@@ -183,6 +316,7 @@ def crear_ventana():
     global swarm
     global map_widget
     global dronIcons, dronPictures
+    global window
 
 
     swarm = None

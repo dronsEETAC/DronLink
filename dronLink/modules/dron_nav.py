@@ -64,7 +64,7 @@ def _goingTread(self):
     self.cmd = self._prepare_command(0, 0, 0)
     while self.going:
         self.vehicle.mav.send(self.cmd)
-        time.sleep(0.25)
+        time.sleep(1)
     self.cmd = self._prepare_command(0, 0, 0)
     time.sleep(1)
 

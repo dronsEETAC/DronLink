@@ -219,7 +219,8 @@ def crear_ventana():
 
 
     SWBtn = tk.Button(navFrame, text="SW", bg="dark orange",
-                        command=lambda: go("SouthWest", SWBtn))
+                        #command=lambda: go("SouthWest", SWBtn))
+                        command = lambda: go("Down", SWBtn))
     SWBtn.grid(row=2, column=0, padx=2, pady=2, sticky=tk.N + tk.S + tk.E + tk.W)
 
     SoBtn = tk.Button(navFrame, text="So", bg="dark orange",
@@ -227,7 +228,8 @@ def crear_ventana():
     SoBtn.grid(row=2, column=1, padx=2, pady=2, sticky=tk.N + tk.S + tk.E + tk.W)
 
     SEBtn = tk.Button(navFrame, text="SE", bg="dark orange",
-                        command=lambda: go("SouthEast", SEBtn))
+                        #command=lambda: go("SouthEast", SEBtn))
+                        command = lambda: go("Up", SEBtn))
     SEBtn.grid(row=2, column=2, padx=2, pady=2, sticky=tk.N + tk.S + tk.E + tk.W)
 
 

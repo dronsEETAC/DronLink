@@ -93,7 +93,7 @@ def unfixHeading (self):
                                                         param_value=1, param_type=dialect.MAV_PARAM_TYPE_REAL32)
     self.vehicle.mav.send(message)
 
-def changeHeading (self, absoluteDegrees):
+def _changeHeading (self, absoluteDegrees, callback=None, params = None):
     # para cambiar el heading en necesario detener el modo navegación
     self._stopGo()
     self.vehicle.mav.command_long_send(
@@ -106,6 +106,42 @@ def changeHeading (self, absoluteDegrees):
         1, # param 3, direction -1 ccw, 1 cw
         0, # param 4, relative offset 1, absolute angle 0
         0, 0, 0, 0) # not used
+
+    while True:
+        msg = self.vehicle.recv_match(type='GLOBAL_POSITION_INT', blocking=True, timeout=3)
+        if msg:
+            msg = msg.to_dict()
+            heading = float(msg['hdg'] / 100)
+            if abs(heading-absoluteDegrees) < 5:
+                break
+            time.sleep(0.25)
+    if callback != None:
+        if self.id == None:
+            if params == None:
+                callback()
+            else:
+                callback(params)
+        else:
+            if params == None:
+                callback(self.id)
+            else:
+                callback(self.id, params)
+
+
+
+def changeHeading (self, absoluteDegrees,blocking=True, callback=None, params = None):
+    if self.state == 'flying':
+        if blocking:
+            self._changeHeading(absoluteDegrees)
+        else:
+            changeHeadingThread = threading.Thread(target=self.__changeHeading, args=[absoluteDegrees, callback, params])
+            changeHeadingThread.start()
+        return True
+    else:
+        return False
+
+
+
 
 def changeNavSpeed (self, speed):
     self.navSpeed = speed

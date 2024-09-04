@@ -13,6 +13,116 @@ from dronLink.Dron import Dron
 import geopy.distance
 from geographiclib.geodesic import Geodesic
 
+from Camera import *
+import cv2 as cv
+
+
+
+
+# clase para gestionar los parámetros del dron
+class ColorManager:
+    # con esta clase gestionamos los parámetros de un dron
+    def __init__(self, camera):
+        self.colorConfiguration = None
+        self.camera = camera
+        self.detectingCodes = False
+
+    def buildFrame (self, window):
+        self.window = window
+        self.managementFrame = tk.LabelFrame(self.window, text='Gestión de los colores')
+        self.managementFrame.rowconfigure(0, weight=1)
+        self.managementFrame.rowconfigure(1, weight=1)
+        self.managementFrame.rowconfigure(2, weight=1)
+        self.managementFrame.rowconfigure(3, weight=1)
+        self.managementFrame.rowconfigure(4, weight=1)
+        self.managementFrame.rowconfigure(5, weight=1)
+        self.managementFrame.columnconfigure(0, weight=1)
+
+        self.detectCodesBtn = tk.Button(self.managementFrame, text='Detectar códigos', bg="dark orange",
+                                        command=self.detectCodes)
+        self.detectCodesBtn.grid(row=0, column=0, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+
+        self.configText = tk.Text(self.managementFrame, width=30, height=10)
+        self.configText.grid(row = 1, column=0)
+        text = "rojo-123\n" \
+               "verde-14\n" \
+               "amarillo-34\n" \
+               "azul-134"
+        self.configText.insert(tk.END, text)
+
+        self.insertName =  tk.BooleanVar(self.managementFrame)
+        self.insertNameCheckbox = tk.Checkbutton(self.managementFrame,
+            text="Insertar el nombre del color", onvalue=1, offvalue=0,
+            variable=self.insertName)
+        self.insertNameCheckbox.grid(row=2, column=0, padx=2, pady=2, sticky=tk.W)
+
+        self.insertContourn = tk.BooleanVar(self.managementFrame)
+        self.insertContournCheckbox = tk.Checkbutton(self.managementFrame,
+            text="Insertar el contorno",
+            variable=self.insertContourn)
+        self.insertContournCheckbox.grid(row=3, column=0, padx=2, pady=2, sticky=tk.W)
+
+        self.recordColorConfigurationBtn = tk.Button(self.managementFrame, text='Guardar configuración',
+                                                     bg="dark orange",
+                                                     command=self.recordColorConfig)
+        self.recordColorConfigurationBtn.grid(row=4, column=0, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+
+
+        self.closeBtn = tk.Button(self.managementFrame, text='Cerrar', bg="dark orange",
+                                        command=self.close)
+        self.closeBtn.grid(row=5, column=0, padx=2, pady=2, sticky=tk.N + tk.E + tk.W)
+
+        return self.managementFrame
+
+    def close (self):
+        if not self.detectingCodes:
+            self.camera.StopVideoStream()
+
+        self.window.destroy()
+
+    def showVideoStream(self,frame, code =None):
+        cv.imshow("videostream", frame)
+        cv.waitKey(1)
+    def detectCodes (self):
+        if not self.detectingCodes:
+            self.detectingCodes = True
+            self.detectCodesBtn['text'] ='Detener'
+            self.detectCodesBtn['bg'] = 'green'
+            self.detectCodesBtn['fg'] = 'white'
+            self.camera.setColorDetectionParams({
+                'showColorCode': True,
+            })
+            self.camera.StartVideoStream(1,self.showVideoStream)
+        else:
+            self.detectingCodes = False
+            self.detectCodesBtn['text'] = 'Detectar códigos'
+            self.detectCodesBtn['bg'] = 'dark orange'
+            self.detectCodesBtn['fg'] = 'black'
+            self.camera.StopVideoStream()
+
+    def recordColorConfig(self):
+        input = self.configText.get("1.0",tk.END)
+        lines = input.split ('\n')
+        params = {
+            'showColorCode': False,
+            'colors': [],
+            'addColorName': self.insertName.get(),
+            'addContourn': self.insertContourn.get()
+        }
+        for line in lines:
+            print (line)
+            parts = line.split ('-')
+            if len(parts) != 2:
+                break
+            params['colors'].append ({
+                'name': parts[0],
+                'code': int (parts[1])
+            })
+        camera.setColorDetectionParams (params)
+
+
+
+
 '''
 Ejemplo de estructura de datos que representa un escenario
 scenario = [
@@ -63,10 +173,11 @@ def createBtnClick ():
     scenario = []
     # limpiamos el mapa de los elementos que tenga
     clear()
-    # quitamos el frame de selección
+    # quitamos el frame de selección y el de juego
     selectFrame.grid_forget()
+    playFrame.grid_forget()
     # visualizamos el frame de creación
-    createFrame.grid(row=1, column=0,  columnspan=2, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
+    createFrame.grid(row=1, column=0,  columnspan=3, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
 
     createBtn['text'] = 'Creando...'
     createBtn['fg'] = 'white'
@@ -75,6 +186,10 @@ def createBtnClick ():
     selectBtn['text'] = 'Seleccionar'
     selectBtn['fg'] = 'black'
     selectBtn['bg'] = 'dark orange'
+
+    playBtn['text'] = 'Jugar'
+    playBtn['fg'] = 'black'
+    playBtn['bg'] = 'dark orange'
 
 # iniciamos la creación de un fence tipo polígono
 def definePoly(type):
@@ -276,7 +391,8 @@ def selectBtnClick ():
         current = 0
         # hacemos desaparecer el frame de creación y mostramos el de selección
         createFrame.grid_forget()
-        selectFrame.grid(row=1, column=0,  columnspan=2, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
+        playFrame.grid_forget()
+        selectFrame.grid(row=1, column=0,  columnspan=3, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
 
         selectBtn['text'] = 'Seleccionando...'
         selectBtn['fg'] = 'white'
@@ -285,6 +401,11 @@ def selectBtnClick ():
         createBtn['text'] = 'Crear'
         createBtn['fg'] = 'black'
         createBtn['bg'] = 'dark orange'
+
+        playBtn['text'] = 'Jugar'
+        playBtn['fg'] = 'black'
+        playBtn['bg'] = 'dark orange'
+
         # no podemos seleccionar el anterior porque no hay anterior
         prevBtn['state'] = tk.DISABLED
         # y si solo hay 1 escenario tampoco hay siguiente
@@ -293,7 +414,7 @@ def selectBtnClick ():
         else:
             nextBtn['state'] = tk.NORMAL
 
-        sendBtn['state'] = tk.DISABLED
+        #sendBtn['state'] = tk.DISABLED
     else:
         messagebox.showinfo("showinfo",
                             "No hay escenarios para elegir")
@@ -439,7 +560,7 @@ def selectScenario ():
     # dibujo el escenario
     drawScenario(selectedScenario)
     # habilito el botón para enviar el escenario al dron
-    sendBtn['state'] = tk.NORMAL
+    #sendBtn['state'] = tk.NORMAL
 
 def informar ():
     messagebox.showinfo("showinfo",
@@ -475,14 +596,14 @@ def processTelemetryInfo (telemetry_info):
     if not dronIcon:
         dronIcon = map_widget.set_marker(lat, lon,
                         icon=dronPicture,icon_anchor="center")
-        draw_arrows(lat, lon)
+        #draw_arrows(lat, lon)
     # si no es el primer paquete entonces muevo el icono a la nueva posición
     else:
-        for item in arrows:
-            item.delete()
+        '''for item in arrows:
+            item.delete()'''
 
         dronIcon.set_position(lat,lon)
-        draw_arrows(lat, lon)
+        #draw_arrows(lat, lon)
 
 
 def sendScenario ():
@@ -495,7 +616,14 @@ def sendScenario ():
         dron.connect(connection_string, baud)
         connected = True
     # envío es escenario al dron y le pido que me informe cuando esté listo
-    dron.setScenario(selectedScenario, blocking=False, callback=informar)
+    #dron.setScenario(selectedScenario, blocking=False, callback=informar)
+    dron.setScenario(selectedScenario)
+
+    # FENCE_ACTION = 1 RTL, 4 BREAK, 2 LAND
+    parameters = [{'ID': "FENCE_ENABLE", 'Value': 1}, {'ID': "FENCE_ACTION", 'Value': 4}]
+    dron.setParams(parameters)
+    dron.changeNavSpeed(1)
+
     dron.send_telemetry_info(processTelemetryInfo)
 
 
@@ -517,20 +645,95 @@ def loadScenario ():
 
 
 
+def playBtnClick ():
+    # quitamos el frame de selección y el de juego
+    selectFrame.grid_forget()
+    createFrame.grid_forget()
+
+    sendScenario()
+
+
+    playFrame.grid(row=1, column=0,  columnspan=3, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
+    createBtn['text'] = 'Crear'
+    createBtn['fg'] = 'black'
+    createBtn['bg'] = 'dark orange'
+
+    selectBtn['text'] = 'Seleccionar'
+    selectBtn['fg'] = 'black'
+    selectBtn['bg'] = 'dark orange'
+
+    playBtn['text'] = 'Jugando ....'
+    playBtn['fg'] = 'white'
+    playBtn['bg'] = 'green'
+
+def setDestinationIcon (coords):
+    global neneIcon
+    if neneIcon:
+        neneIcon.delete()
+    neneIcon = map_widget.set_marker(coords[0], coords[1], icon=nene, icon_anchor="center")
+def setDestinationBtnClick():
+
+    map_widget.add_left_click_map_command(setDestinationIcon)
+    messagebox.showinfo("showinfo",
+                        "Con el boton izquierdo del ratón señala el destino")
+def startColorManager():
+    colorManagementWindow = tk.Tk()
+    colorManagementWindow.title("Gestión de colores")
+    colorManagementWindow.rowconfigure(0, weight=1)
+    colorManagementWindow.columnconfigure(0, weight=1)
+    colorManager = ColorManager(camera)
+    frame = colorManager.buildFrame(colorManagementWindow)
+    frame.grid ( row=0, column = 0, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
+    colorManagementWindow.mainloop()
+
+def arm_takeOffBtnClick():
+    dron.arm()
+    dron.takeOff(2)
+    arm_takeOffBtn['text'] = 'En el aire'
+    arm_takeOffBtn['fg'] = 'white'
+    arm_takeOffBtn['bg'] = 'green'
+
+def processVideoStream (frame, code):
+    cv.imshow("videostream", frame)
+    cv.waitKey(1)
+    if code == 0:
+        dron.go('North')
+    elif code == 1:
+        dron.go('South')
+    elif code == 2:
+        dron.go ('East')
+    elif code == 3:
+        dron.go ('West')
+
+
+def go (direction):
+    dron.go (direction)
+    camera.StartVideoStream(1,processVideoStream)
+
+
+def dropBtnClick ():
+    pass
+
+def RTLBtnClick ():
+    parameters = [{'ID': "FENCE_ENABLE", 'Value': 0}]
+    dron.setParams(parameters)
+    dron.RTL(blocking=False)
 
 def crear_ventana():
 
     global map_widget
-    global createBtn,selectBtn, createFrame, name, selectFrame, scene, scenePic,scenarios, current
-    global prevBtn, nextBtn, sendBtn
+    global createBtn,selectBtn, playBtn, createFrame, name, selectFrame, playFrame, scene, scenePic,scenarios, current
+    global prevBtn, nextBtn, arm_takeOffBtn
     global scenarioCanvas
     global i_wp, e_wp
     global paths, fence, polys
     global connected
-    global dronPicture, dronIcon, nene
+    global dronPicture, dronIcon, nene, neneIcon
+    global camera
 
     connected = False
     dronIcon = None
+    neneIcon = None
 
     # para guardar datos y luego poder borrarlos
     paths = []
@@ -554,17 +757,20 @@ def crear_ventana():
     controlFrame.rowconfigure(1, weight=1)
     controlFrame.columnconfigure(0, weight=1)
     controlFrame.columnconfigure(1, weight=1)
+    controlFrame.columnconfigure(2, weight=1)
 
     # botones para crear/seleccionar
     createBtn = tk.Button(controlFrame, text="Crear", bg="dark orange", command = createBtnClick)
     createBtn.grid(row=0, column=0, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
     selectBtn = tk.Button(controlFrame, text="Seleccionar", bg="dark orange", command = selectBtnClick)
     selectBtn.grid(row=0, column=1,  padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+    playBtn = tk.Button(controlFrame, text="Jugar", bg="dark orange",  command = playBtnClick)
+    playBtn.grid(row=0, column=2,  padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
 
     # frame para crear escenario
     createFrame = tk.LabelFrame(controlFrame, text='Crear escenario')
     # la visualización del frame se hace cuando se clica el botón de crear
-    #createFrame.grid(row=1, column=0,  columnspan=2, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+    #createFrame.grid(row=1, column=0,  columnspan=3, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
     createFrame.rowconfigure(0, weight=1)
     createFrame.rowconfigure(1, weight=1)
     createFrame.rowconfigure(2, weight=1)
@@ -614,13 +820,12 @@ def crear_ventana():
     # frame para seleccionar escenarios
     selectFrame = tk.LabelFrame(controlFrame, text='Selecciona escenario')
     # la visualización del frame se hace cuando se clica el botón de seleccionar
-    #selectFrame.grid(row=1, column=0,  columnspan=2, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+    #selectFrame.grid(row=1, column=0,  columnspan=3, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
 
     selectFrame.rowconfigure(0, weight=1)
     selectFrame.rowconfigure(1, weight=1)
     selectFrame.rowconfigure(2, weight=1)
     selectFrame.rowconfigure(3, weight=1)
-    selectFrame.rowconfigure(4, weight=1)
     selectFrame.columnconfigure(0, weight=1)
     selectFrame.columnconfigure(1, weight=1)
     selectFrame.columnconfigure(2, weight=1)
@@ -640,11 +845,61 @@ def crear_ventana():
     loadBtn = tk.Button(selectFrame, text="Cargar el escenario que hay en el dron", bg="dark orange", command=loadScenario)
     loadBtn.grid(row=2, column=0,columnspan = 4, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
 
-    sendBtn = tk.Button(selectFrame, text="Enviar escenario", bg="dark orange", command=sendScenario)
-    sendBtn.grid(row=3, column=0,columnspan = 4, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
-
     deleteBtn = tk.Button(selectFrame, text="Eliminar escenario", bg="red", fg = 'white', command = deleteScenario)
-    deleteBtn.grid(row=4, column=0, columnspan = 4, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
+    deleteBtn.grid(row=3, column=0, columnspan = 4, padx=5, pady=5, sticky=tk.N +  tk.E + tk.W)
+
+    # frame para jugar
+    playFrame = tk.LabelFrame(controlFrame, text='Jugar')
+    # la visualización del frame se hace cuando se clica el botón de jugar
+    # payFrame.grid(row=1, column=2,  columnspan=3, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+
+    playFrame.rowconfigure(0, weight=1)
+    playFrame.rowconfigure(1, weight=1)
+    playFrame.rowconfigure(2, weight=1)
+    playFrame.rowconfigure(3, weight=1)
+    playFrame.rowconfigure(4, weight=1)
+    playFrame.rowconfigure(5, weight=1)
+    playFrame.columnconfigure(0, weight=1)
+
+    setDestinationBtn = tk.Button(playFrame, text="Situar el destino", bg="dark orange",
+                                  command=setDestinationBtnClick)
+    setDestinationBtn.grid(row=0, column=0, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+
+    recognitionTypeBtn = tk.Button(playFrame, text="Colores", bg="dark orange",
+                                  command=startColorManager)
+    recognitionTypeBtn.grid(row=1, column=0, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+
+    arm_takeOffBtn = tk.Button(playFrame, text="Armar y despegar", bg="dark orange",
+                                  command=arm_takeOffBtnClick)
+    arm_takeOffBtn.grid(row=2, column=0, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+
+    navFrame = tk.LabelFrame(playFrame, text='Navega hacia ....')
+    navFrame.grid(row=3, column=0, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+    navFrame.rowconfigure(0, weight=1)
+    navFrame.columnconfigure(0, weight=1)
+    navFrame.columnconfigure(1, weight=1)
+    navFrame.columnconfigure(2, weight=1)
+    navFrame.columnconfigure(3, weight=1)
+    northBtn = tk.Button(navFrame, text="Norte", bg="dark orange",
+                                  command= lambda: go('North'))
+    northBtn.grid(row=0, column=0, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+    southBtn = tk.Button(navFrame, text="Sur  ", bg="dark orange",
+                                  command= lambda: go('South'))
+    southBtn.grid(row=0, column=1, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+    eastBtn = tk.Button(navFrame, text="Este ", bg="dark orange",
+                                  command= lambda: go('East'))
+    eastBtn.grid(row=0, column=2, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+    westBtn = tk.Button(navFrame, text="Oeste", bg="dark orange",
+                                  command= lambda: go('West'))
+    westBtn.grid(row=0, column=3, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+
+    dropBtn = tk.Button(playFrame, text="Drop", bg="dark orange",
+                               command=dropBtnClick)
+    dropBtn.grid(row=4, column=0, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
+
+    RTLBtn = tk.Button(playFrame, text="RTL", bg="dark orange",
+                               command=RTLBtnClick)
+    RTLBtn.grid(row=5, column=0, padx=5, pady=5, sticky=tk.N + tk.E + tk.W)
 
     # Aquí tenemos el frame que se muestra en la columna de la derecha, que contiene el mapa
     mapaFrame = tk.LabelFrame(ventana, text='Mapa')
@@ -684,8 +939,23 @@ def crear_ventana():
     e_wp = ImageTk.PhotoImage(im_resized)
 
     im = Image.open("images/nene.png")
-    im_resized = im.resize((25, 25), Image.LANCZOS)
+    im_resized = im.resize((40, 40), Image.LANCZOS)
     nene = ImageTk.PhotoImage(im_resized)
+
+    camera = Camera()
+    params = {
+        'colors': [
+            {'name': 'yellow', 'code': 36},
+            {'name': 'green', 'code': 75},
+            {'name': 'blue', 'code': 110},
+            {'name': 'red', 'code': 6}
+        ],
+        'addColorName': True,
+        'addContourn': True
+    }
+
+    camera.setColorDetectionParams(params)
+
 
     return ventana
 

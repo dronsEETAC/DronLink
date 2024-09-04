@@ -152,7 +152,14 @@ En la tabla que se enlaza más abajo se describen los métodos de la clase Dron 
      
 [Métodos de la clase Dron](dronLink/docs/tabla_dronLink.pdf)   
 
-## 4. Demostradores
+## 4. Instalación de dronLink
+Para poder usar la librería dronLink en un proyecto Pycharm es necesario copiar la carpeta dronLink que hay en este repositorio en la carpeta del proyecto en el que se quiere usar. Para ello basta clonar este repositorio y luego copiar la carpeta dronLink (y posiblemente borrar después el repositorio clonado).     
+
+Una alternativa es desacargar solamente la carpeta dronLink. El siguiente vídeo muestra cómo hacerlo.     
+  
+[![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DDr551YGz3QA)](https://www.youtube.com/watch?v=Dr551YGz3QA)     
+
+## 5. Demostradores
 En este repositorio se proporcionan cuatro aplicaciones que demuestran el uso de la librería DronLink en diferentes contextos (modo de comunicación directo, modo de comunicación global y enjambre de drones). Puede ser conveniente ver antes este video que aclara la cuestión de los modos de comunicación tierra-dron.      
 
 [![](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfOmVdmOW8ag)](https://www.youtube.com/watch?v=fOmVdmOW8ag)

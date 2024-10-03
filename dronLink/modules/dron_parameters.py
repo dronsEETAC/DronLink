@@ -5,6 +5,9 @@ import pymavlink.dialects.v20.all as dialect
 
 
 def _getParams(self,parameters,  callback=None):
+    # detengo la toma de datos de telemetria para que no interfiera con la lectura
+    # de parametros, porque si no se hace asi, esa lectura puede ser muy lenta
+    self.takeTelemetry = False
     result = []
     for PARAM in parameters:
         ready = False
@@ -16,7 +19,7 @@ def _getParams(self,parameters,  callback=None):
                 -1
             )
             # y espero que llegue el valor. Si no llega en 3 segundos insisto.
-            message = self.vehicle.recv_match(type='PARAM_VALUE', blocking=True, timeout = 3)
+            message = self.vehicle.recv_match(type='PARAM_VALUE', blocking=True)
             if message:
                 message = message.to_dict()
                 if message['param_id'] == PARAM:
@@ -25,7 +28,10 @@ def _getParams(self,parameters,  callback=None):
         result.append({
             message['param_id']: message["param_value"]
         })
+        print ('ya tengo otro')
     print (result)
+    # reactivo la toma de datos de telemetria
+    self.takeTelemetry = True
 
     if callback != None:
         if self.id == None:

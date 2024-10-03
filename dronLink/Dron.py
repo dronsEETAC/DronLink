@@ -34,6 +34,10 @@ class Dron(object):
         self.heading = 0
         self.lastDirection = None
         self.flightMode = None
+        self.minAltGeofence = 0
+        self.takeTelemetry = False
+        # se usa para parar la captura de datos de telemetria para que no molesten cuando quiero
+        # leer parámetros
 
     # aqui se importan los métodos de la clase Dron, que están organizados en ficheros.
     # Así podría orgenizarse la aportación de futuros alumnos que necesitasen incorporar nuevos servicios

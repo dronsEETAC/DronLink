@@ -19,7 +19,8 @@ def _getParams(self,parameters,  callback=None):
                 -1
             )
             # y espero que llegue el valor. Si no llega en 3 segundos insisto.
-            message = self.vehicle.recv_match(type='PARAM_VALUE', blocking=True)
+            # le pido al handler el mensaje
+            message = self.message_handler.wait_for_message('PARAM_VALUE', timeout=3)
             if message:
                 message = message.to_dict()
                 if message['param_id'] == PARAM:

@@ -176,7 +176,7 @@ def go(self, direction):
         if direction == "Forward":
             self.cmd = self._prepare_command(speed, 0, 0, bodyRef = True)
         if direction == "Back":
-            self.cmd = self._prepare_command(-speed, 0, bodyRef=True)
+            self.cmd = self._prepare_command(-speed, 0, 0, bodyRef=True)
         if direction == "Left":
             self.cmd = self._prepare_command(0, speed, 0, bodyRef=True)
         if direction == "Right":

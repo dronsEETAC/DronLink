@@ -14,7 +14,8 @@ def _goDown(self, mode, callback=None, params = None):
         mode_id)
     # esperamos a que el dron esté en tierra
     while True:
-        msg = self.vehicle.recv_match(type='GLOBAL_POSITION_INT', blocking=True, timeout = 3)
+        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
+
         if msg:
             msg = msg.to_dict()
             alt = float(msg['relative_alt'] / 1000)

@@ -1,6 +1,7 @@
 
 class Dron(object):
     def __init__(self, id = None):
+        print ("DronLink con Handlers")
         self.id = id
 
         self.state = "disconnected"
@@ -36,6 +37,8 @@ class Dron(object):
         self.flightMode = None
         self.minAltGeofence = 0
         self.takeTelemetry = False
+
+        self.message_handler = None
         # se usa para parar la captura de datos de telemetria para que no molesten cuando quiero
         # leer parámetros
 
@@ -62,3 +65,4 @@ class Dron(object):
     from dronLink.modules.dron_drop import drop
     from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed
     from dronLink.modules.dron_bottomGeofence  import startBottomGeofence, stopBottomGeofence,  _minAltChecking
+    from dronLink.modules.message_handler import MessageHandler

@@ -2,37 +2,34 @@ import json
 import threading
 import pymavlink.dialects.v20.all as dialect
 
+def _checkParameter (self, msg, param):
+    if msg.param_id == param:
+        return True
+    else:
+        return False
 
 
 def _getParams(self,parameters,  callback=None):
-    # detengo la toma de datos de telemetria para que no interfiera con la lectura
-    # de parametros, porque si no se hace asi, esa lectura puede ser muy lenta
-    self.takeTelemetry = False
     result = []
     for PARAM in parameters:
-        ready = False
-        while not ready:
-            # pido el valor del siguiente parámetro de la lista
-            self.vehicle.mav.param_request_read_send(
-                self.vehicle.target_system, self.vehicle.target_component,
-                PARAM.encode(encoding="utf-8"),
-                -1
-            )
-            # y espero que llegue el valor. Si no llega en 3 segundos insisto.
-            # le pido al handler el mensaje
-            message = self.message_handler.wait_for_message('PARAM_VALUE', timeout=3)
-            if message:
-                message = message.to_dict()
-                if message['param_id'] == PARAM:
-                    ready = True
-        # añado el valor a la lista
+        # pido el valor del siguiente parámetro de la lista
+        self.vehicle.mav.param_request_read_send(
+            self.vehicle.target_system, self.vehicle.target_component,
+            PARAM.encode(encoding="utf-8"),
+            -1
+        )
+        # y espero que llegue el valor
+        message = self.message_handler.wait_for_message(
+            'PARAM_VALUE',
+            condition=self._checkParameter,
+            params=PARAM
+        )
+        message = message.to_dict()
         result.append({
             message['param_id']: message["param_value"]
         })
         print ('ya tengo otro')
-    print (result)
     # reactivo la toma de datos de telemetria
-    self.takeTelemetry = True
 
     if callback != None:
         if self.id == None:

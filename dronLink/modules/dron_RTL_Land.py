@@ -2,6 +2,9 @@ import threading
 import time
 from pymavlink import mavutil
 
+def _checkOnHearth (self, msg):
+    return msg.relative_alt < 500
+
 def _goDown(self, mode, callback=None, params = None):
     # detemenos el modo navegación
     self._stopGo()
@@ -13,15 +16,10 @@ def _goDown(self, mode, callback=None, params = None):
         mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
         mode_id)
     # esperamos a que el dron esté en tierra
-    while True:
-        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
-
-        if msg:
-            msg = msg.to_dict()
-            alt = float(msg['relative_alt'] / 1000)
-            if alt < 0.5:
-                break
-            time.sleep(0.1)
+    msg = self.message_handler.wait_for_message(
+        'GLOBAL_POSITION_INT',
+        condition=self._checkOnHearth,
+    )
 
     self.vehicle.motors_disarmed_wait()
     self.state = "connected"

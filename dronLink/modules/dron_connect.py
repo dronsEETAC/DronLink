@@ -10,16 +10,16 @@ ha pasado mucho tiempo desde que se armó sin despegar'''
 
 
 def _handle_heartbeat(self, msg):
-    if self.takeTelemetry:
-        if msg.base_mode == 89 and self.state == 'armed':
-            self.state = 'connected'
-        mode = mavutil.mode_string_v10(msg)
-        if not 'Mode(0x000000' in str(mode):
+    if msg.base_mode == 89 and self.state == 'armed':
+        self.state = 'connected'
+    mode = mavutil.mode_string_v10(msg)
+    if not 'Mode(0x000000' in str(mode):
             self.flightMode = mode
 
 
+
 def _record_telemetry_info(self, msg):
-    if self.takeTelemetry and msg:
+    if msg:
         msg = msg.to_dict()
 
         self.lat = float(msg['lat'] / 10 ** 7)
@@ -37,14 +37,14 @@ def _record_telemetry_info(self, msg):
 
 
 def _record_local_telemetry_info(self, msg):
-    if self.takeTelemetry and msg:
+    if msg:
         self.position = [msg.x, msg.y, msg.z]
 
 def _connect(self, connection_string, baud, callback=None, params=None):
     self.vehicle = mavutil.mavlink_connection(connection_string, baud)
     self.vehicle.wait_heartbeat()
     self.state = "connected"
-    self.takeTelemetry = True
+
     # pongo en marcha el gestor de mensaje
     self.message_handler = MessageHandler(self.vehicle)
 
@@ -98,7 +98,6 @@ def connect(self,
         self.frequency = freq
         if blocking:
             self._connect(connection_string, baud)
-            print('ya estoy conectado')
         else:
             connectThread = threading.Thread(target=self._connect, args=[connection_string, baud, callback, params, ])
             connectThread.start()

@@ -13,6 +13,13 @@ import time
 from pymavlink import mavutil
 import pymavlink.dialects.v20.all as dialect
 
+def _checkHeadingReached (self, msg, absoluteDegrees):
+    heading =float (msg.hdg/ 100)
+    if abs(heading-absoluteDegrees) < 5:
+        return True
+    else:
+        return False
+
 def _prepare_command(self, velocity_x, velocity_y, velocity_z, bodyRef = False):
     """
     Move vehicle in direction based on specified velocity vectors.
@@ -107,14 +114,20 @@ def _changeHeading (self, absoluteDegrees, callback=None, params = None):
         0, # param 4, relative offset 1, absolute angle 0
         0, 0, 0, 0) # not used
 
-    while True:
-        msg = self.vehicle.recv_match(type='GLOBAL_POSITION_INT', blocking=True, timeout=3)
+    # espero hasta que haya alcanzado la orientación indicada
+    msg = self.message_handler.wait_for_message(
+        'GLOBAL_POSITION_INT',
+        condition = self._checkHeadingReached,
+        params = absoluteDegrees
+    )
+    '''while True:
+        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
         if msg:
             msg = msg.to_dict()
             heading = float(msg['hdg'] / 100)
             if abs(heading-absoluteDegrees) < 5:
                 break
-            time.sleep(0.25)
+            time.sleep(0.25)'''
     if callback != None:
         if self.id == None:
             if params == None:

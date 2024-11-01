@@ -5,6 +5,17 @@ import time
 from pymavlink import mavutil
 import pymavlink.dialects.v20.all as dialect
 
+def _checkSpeedZero (self, msg):
+    msg = msg.to_dict()
+    vx = float(msg['vx'])
+    vy = float(msg['vy'])
+    vz = float(msg['vz'])
+    speed = math.sqrt(vx * vx + vy * vy + vz * vz) / 100
+    if speed < 0.1:
+        return True
+    else:
+        return False
+
 
 def _prepare_command_mov(self, step_x, step_y, step_z, bodyRef = False):
     if bodyRef:
@@ -78,9 +89,14 @@ def _move_distance (self, direction, distance, callback=None, params = None):
 
     self.vehicle.mav.send(self.cmd)
     time.sleep (5)
-    # espero en este bucle hasta que se ha alcanzado a altura indicada
-    while True:
-        msg = self.vehicle.recv_match(type='GLOBAL_POSITION_INT', blocking=True, timeout=3)
+    # espero en este bucle hasta que se ha alcanzado el destino
+    # lo sabre porque la velocidad es cero
+    msg = self.message_handler.wait_for_message(
+        'GLOBAL_POSITION_INT',
+        condition=self._checkSpeedZero,
+    )
+    '''  while True:
+        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
         if msg:
             msg = msg.to_dict()
             vx =  float(msg['vx'])
@@ -89,7 +105,7 @@ def _move_distance (self, direction, distance, callback=None, params = None):
             speed = math.sqrt( vx*vx+vy*vy+vz*vz)/100
             if speed < 0.1:
                 break
-            time.sleep(0.25)
+            time.sleep(0.25)'''
 
     # meter aqui un bucle esperando hasta que haya llegado
     if callback != None:

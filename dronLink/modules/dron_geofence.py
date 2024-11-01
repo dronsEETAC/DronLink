@@ -84,8 +84,10 @@ def _getScenario(self, callback=None):
         'FENCE_TOTAL'.encode(encoding="utf-8"),
         -1
     )
-    message = self.message_handler.wait_for_message('PARAM_VALUE', timeout=5)
+    message = self.message_handler.wait_for_message('PARAM_VALUE')
+    print ('recibo fence total ', message)
     if message is None:
+        print ('nada')
         if callback:
             callback(None)
         else:
@@ -93,20 +95,20 @@ def _getScenario(self, callback=None):
     else:
         message = message.to_dict()
     total = int(message["param_value"])
+    print ('total ', total)
     if total == 0:
         # no hay fence
         return None
     else:
         fencePoints = []
         idx = 0
-        while idx < total:
+        # FENCE_TOTAL es dos más del número de puntos del escenario
+        while idx < total -2:
             # solicito el punto siguiente
             self.vehicle.mav.mission_request_int_send(self.vehicle.target_system, self.vehicle.target_component, idx,
                                                 mavutil.mavlink.MAV_MISSION_TYPE_FENCE)
-
-            msg = self.message_handler.wait_for_message('MISSION_ITEM_INT', timeout=1)
-            if msg is None:
-                break
+            print ('espero el ', idx)
+            msg = self.message_handler.wait_for_message('MISSION_ITEM_INT')
             fencePoints.append (msg)
             idx = idx + 1
 
@@ -124,6 +126,7 @@ def _getScenario(self, callback=None):
 
 def getScenario(self, blocking=True, callback=None):
     if blocking:
+        print ('lo pido')
         return self._getScenario()
     else:
         getScenarioThread= threading.Thread(target=self._getScenario, args=[callback])
@@ -288,7 +291,7 @@ def _setScenario(self, scenario, callback=None, params = None):
     # ahora enviamos los comandos
     while True:
         # esperamos a que nos pida el siguiente
-        msg = self.message_handler.wait_for_message('MISSION_REQUEST', timeout=1)
+        msg = self.message_handler.wait_for_message('MISSION_REQUEST')
         self.vehicle.mav.send(wploader[msg.seq])
         if msg.seq == len(wploader) - 1:
             # ya los hemos enviado todos

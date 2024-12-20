@@ -8,6 +8,7 @@ baud = 115200
 dron.connect(connection_string, baud)
 print ('conectado')
 dron.arm()
+time.sleep (50)
 dron.takeOff (25)
 print ('ya he llegado a los 25 metros')
 dron.change_altitude (15)

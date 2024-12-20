@@ -14,6 +14,7 @@ def _handle_heartbeat2(self):
         if msg:
             if msg.base_mode == 89 and self.state == 'armed':
                 self.state = 'connected'
+                print ("Me acabo de desconectar")
             mode = mavutil.mode_string_v10(msg)
             if not 'Mode(0x000000' in str(mode):
                 self.flightMode = mode
@@ -29,6 +30,7 @@ def _handle_heartbeat(self):
             if msg:
                 if msg.base_mode == 89 and self.state == 'armed':
                     self.state = 'connected'
+                    print("Me acabo de desconectar")
                 mode = mavutil.mode_string_v10(msg)
                 if not 'Mode(0x000000' in str(mode):
                     self.flightMode = mode

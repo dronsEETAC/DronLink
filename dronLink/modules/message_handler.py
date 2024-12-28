@@ -10,7 +10,7 @@ class MessageHandler:
     bloqueos frecuentes que afectaban a la fluidez
 
     En principio esta clase solo la usan los métodos de la clase Dron.
-    Hay dos tipos de usos. Por una parte están las peticiones síncronas. En ese caso, el método que sea
+    Hay dos tipos de peticiones. Por una parte están las peticiones síncronas. En ese caso, el método que sea
     necesita un dato, lo pide a este handler y se queda boqueado hasta que el handler le proporciona el dato.
     La sincronización entre el consumidor (el método que necesita el dato) y el productor (el handler) se
     implementa mediante una cola que entrega el consumidor en la que el productor pondrá el dato cuando
@@ -50,6 +50,36 @@ class MessageHandler:
     la altura es ya superior a ese objetivo (con un error del 5%). Recordar que la altura objetivo se especifica en metros
     pero la altura relativa nos la dan en milimetros.
 
+    Las peticiones sincronas pueden tener un problema. En circunstancias de saturación de la estación de tierra, por ejemplo,
+    cuando se trabaja  con multiples drones, es posible que pidamos el mensaje que queramos y este llegue antes de que
+    se haya llamado a la función wait_for_message, con lo que el mensaje se perderá. Eso pasa por ejemplo, cuando pedímos parámetros
+    de varios drones.
+
+    Para combatir esto se puede hacer que la función que pide el mensaje lo pida repetidamente hasta que el mensaje llegue.
+    Muy improbable es que el problema se repita varias veces seguidas.
+
+    La otra opción es cambiar ligeramente el orden de las cosas. Para ello, primero se llama a la función wait_for_message pero
+    indicandole que solo registre el handler para el mensaje y no se quede esperandolo. Por ejemplo:
+
+     waiting = self.message_handler.wait_for_message(
+                'PARAM_VALUE',
+                condition=self._checkParameter,
+                params=PARAM,
+                wait=False
+            )
+    Entonces hacemos la petición del mensaje, por ejemplo:
+
+      self.vehicle.mav.param_request_read_send(
+                self.vehicle.target_system, self.vehicle.target_component,
+                PARAM.encode(encoding="utf-8"),
+                -1
+            )
+    y despues esperamos la llegada del mensaje, que aunque llegue rápido ya encontrará
+    la cola del handler preparada. Para ello llama a la función wait_now
+
+    message = self.message_handler.wait_now(waiting, timeout=5)
+
+
     Por otra parte tenemos las peticiones asíncronas, del tipo "Cuando recibas un mensaje de este tipo ejecutaeste callback".
     Ese es el tipo de peticiones que necesitamos para recoger periódicamente os datos de telemetría.
     Para esas peticiones tenemos el método register_handler, al que le damos el tipo de mensaje y la función
@@ -76,14 +106,16 @@ class MessageHandler:
     def _message_loop(self):
         while self.running:
             # espero un mensaje. Este es el único punto en el que espermos un mensaje
-            msg = self.vehicle.recv_match(blocking=True, timeout=1)
+            #msg = self.vehicle.recv_match(blocking=True, timeout=3)
+            msg = self.vehicle.recv_match(blocking=True)
+
             if msg:
                 msg_type = msg.get_type()
+                #print ('recibo ', msg_type)
 
-
-                # Handle synchronous waits
                 # primero miramos si hay alguna petición síncrona para este mensaje
                 with self.lock:
+                    sendMessage = False
                     for waiting in self.waiting_threads:
                         if waiting['msg_type'] == msg_type:
                             if not waiting['condition']:
@@ -97,10 +129,9 @@ class MessageHandler:
                             if sendMessage:
                                 waiting['queue'].put(msg)
                                 # y lo quitamos de la cola porque ya ha sido atendido
-                                self.waiting_threads.remove(waiting)
-                                break  # Remove only one waiting thread per message
+                                #self.waiting_threads.remove(waiting)
+                                break
 
-                # Dispatch message to registered handlers
                 # ahora atendemos a las peticiones asíncronas
                 if msg_type in self.handlers:
                     # vemos si este tipo de mensaje está en la lista de handlers
@@ -124,10 +155,10 @@ class MessageHandler:
                 self.handlers[msg_type].remove(callback)
                 if not self.handlers[msg_type]:
                     del self.handlers[msg_type]
-
-    def wait_for_message(self, msg_type, condition=None, params= None, timeout=None):
-        # Le indico al handler el mensaje que necesito (tipo y condicion) y me espero a recogerlo
-        # tanto tiempo como indique el timeout
+    def wait_for_message(self, msg_type, condition=None, params= None, timeout = None, wait = True):
+        # Le indico al handler el mensaje que necesito (tipo y condicion)
+        # Puedo indicarle que no espere
+        # En el caso de que espere le indico  el timeout
         # Creo una cola en la que quiero que el handler me deje el mensaje que espero
         msg_queue = queue.Queue()
         # Preparo la información de lo que espero
@@ -140,12 +171,59 @@ class MessageHandler:
         with self.lock:
             # Le envío al handles la información de lo que espero
             self.waiting_threads.append(waiting)
+        if wait:
+            # me quedo a esperar el mensaje
+            try:
+                # aqui espero que me ponga el mensaje en la cola que le he indicado
+                msg = waiting['queue'].get(timeout=timeout)
+            except queue.Empty:
+                # si ha pasado el timeout retorno un mensaje vacio
+                msg = None
+            # elimino el registro del handler porque ya ha sido resuelto
+            self.waiting_threads.remove(waiting)
+            return msg
+        else:
+            # si no tengo que esperar devuelvo la estructura de datos que se necesitará para esperar más adelante
+            return waiting
+
+
+
+    def wait_now(self, waiting, timeout):
+        # esta es la función que hay que llamar si no nos hemos parado a esperar en la llamada wait_for_message
         try:
             # aqui espero que me ponga el mensaje en la cola que le he indicado
-            msg = msg_queue.get(timeout=timeout)
+            msg = waiting ['queue'].get(timeout=timeout)
         except queue.Empty:
             # si ha pasado el timeout retorno un mensaje vacio
             msg = None
+        self.waiting_threads.remove(waiting)
+        return msg
+
+    def wait_for_message2(self, msg_type, condition=None, params= None, timeout=None):
+        # Le indico al handler el mensaje que necesito (tipo y condicion) y me espero a recogerlo
+        # tanto tiempo como indique el timeout
+        # Creo una cola en la que quiero que el handler me deje el mensaje que espero
+        msg_queue = queue.Queue()
+        # Preparo la información de lo que espero
+        waiting = {
+            'msg_type': msg_type,
+            'condition': condition,
+            'params': params,
+            'queue': msg_queue
+        }
+        #with self.lock:
+        # Le envío al handles la información de lo que espero
+        self.waiting_threads.append(waiting)
+        try:
+            # aqui espero que me ponga el mensaje en la cola que le he indicado
+            print ('espero el mensaje')
+            msg = msg_queue.get(timeout=timeout)
+            print ('ya tengo el mensaje ', msg)
+        except queue.Empty:
+            # si ha pasado el timeout retorno un mensaje vacio
+            print ('la cola esta vacia')
+            msg = None
+        self.waiting_threads.remove(waiting)
         return msg
 
     def stop(self):

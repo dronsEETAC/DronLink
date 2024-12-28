@@ -12,6 +12,7 @@ ha pasado mucho tiempo desde que se armó sin despegar'''
 def _handle_heartbeat(self, msg):
     if msg.base_mode == 89 and self.state == 'armed':
         self.state = 'connected'
+        print ('Ne acabo de desarmar')
     mode = mavutil.mode_string_v10(msg)
     if not 'Mode(0x000000' in str(mode):
             self.flightMode = mode
@@ -90,7 +91,7 @@ def _connect(self, connection_string, baud, callback=None, params=None):
 def connect(self,
             connection_string,
             baud,
-            freq=10,
+            freq=4,
             blocking=True,
             callback=None,
             params=None):
@@ -117,3 +118,18 @@ def disconnect(self):
         return True
     else:
         return False
+
+def reboot (self):
+    self.vehicle.mav.command_long_send(
+        self.vehicle.target_system,  # ID del sistema
+        self.vehicle.target_component,  # ID del componente
+        mavutil.mavlink.MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN,  # Comando de reinicio
+        0,  # Confirmación
+        1,  # Parám 1: 1 para reiniciar el autopiloto
+        0,  # Parám 2: no utilizado
+        0,  # Parám 3: no utilizado
+        0,  # Parám 4: no utilizado
+        0,  # Parám 5: no utilizado
+        0,  # Parám 6: no utilizado
+        0   # Parám 7: no utilizado
+    )

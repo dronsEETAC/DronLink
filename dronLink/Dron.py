@@ -22,7 +22,7 @@ class Dron(object):
         self.frequency = None  #numero de muestras de telemetría por segundo
 
         self.going = False # se usa en dron_nav
-        self.navSpeed = 5 # se usa en dron_nav
+        self.navSpeed = 1 # se usa en dron_nav
         self.direction = 'Stop' # se usa en dron_nav
 
         self.sendTelemetryInfo = False #usado en dron_telemetry
@@ -48,7 +48,7 @@ class Dron(object):
     # ese atributo hay que declararlo aqui y no en el fichero con los métodos nuevos.
     # Ese es el caso del atributo going, que lo tengo que declarar aqui y preferiría poder declararlo en el fichero dron_goto
 
-    from dronLink.modules.dron_connect import connect, _connect, disconnect, _handle_heartbeat, _record_telemetry_info, _record_local_telemetry_info
+    from dronLink.modules.dron_connect import connect, _connect, disconnect, _handle_heartbeat, _record_telemetry_info, _record_local_telemetry_info, reboot
     from dronLink.modules.dron_arm import arm, _arm, setFlightMode
     from dronLink.modules.dron_takeOff import takeOff, _takeOff, _checkAltitudeReached
     from dronLink.modules.dron_RTL_Land import  RTL, Land, _goDown, _checkOnHearth

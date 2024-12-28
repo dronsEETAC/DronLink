@@ -280,6 +280,7 @@ def _setScenario(self, scenario, callback=None, params = None):
                 ))
                 seq += 1
 
+    print ('envio contador')
     # indicamos el número total de comandos que tenemos que enviar para crear el escenario
     self.vehicle.mav.mission_count_send(
         self.vehicle.target_system,
@@ -291,12 +292,14 @@ def _setScenario(self, scenario, callback=None, params = None):
     # ahora enviamos los comandos
     while True:
         # esperamos a que nos pida el siguiente
-        msg = self.message_handler.wait_for_message('MISSION_REQUEST')
-        self.vehicle.mav.send(wploader[msg.seq])
-        if msg.seq == len(wploader) - 1:
-            # ya los hemos enviado todos
-            print("Enviados todos")
-            break
+        msg = self.message_handler.wait_for_message('MISSION_REQUEST',  timeout=3)
+        if msg:
+            print ('envio el wp ' + str( msg.seq) + ' de ' + str(len (wploader)-1))
+            self.vehicle.mav.send(wploader[msg.seq])
+            if msg.seq == len(wploader) - 1:
+                # ya los hemos enviado todos
+                print("Enviados todos")
+                break
 
     msg = self.message_handler.wait_for_message('MISSION_ACK', timeout=3)
     print("Mission ack enviado")

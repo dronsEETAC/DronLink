@@ -22,10 +22,13 @@ baud = 115200
 dron.connect(connection_string, baud)
 
 mission = {
+        "speed": 7,
         "takeOffAlt": 8,
         "waypoints": [
             {'lat': 41.2764035, 'lon': 1.9883262, 'alt': 5},
+            {'rotAbs': 90},
             {'lat': 41.2762160, 'lon': 1.9883537, 'alt': 15},
+            {'rotRel': 90, 'dir': -1},
             {'lat': 41.2762281, 'lon': 1.9884771, 'alt': 9}
         ]
 }

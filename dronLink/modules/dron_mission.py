@@ -78,11 +78,12 @@ def _uploadMission (self, mission, callback=None, params = None):
 
     waypoints = mission['waypoints']
 
-
     # preparamos la misión para cargarla en el dron
 
     wploader = []
     seq = 0  # Waypoint sequence begins at 0
+
+
     # El primer wp debe ser la home position.
     # Averiguamos la home position
     self.vehicle.mav.command_long_send(
@@ -107,7 +108,7 @@ def _uploadMission (self, mission, callback=None, params = None):
         lon,
         alt
     ))
-    seq = 1
+    seq += 1
 
     # El siguiente elemento de la mision debe ser el comando de takeOff, en el que debemos indicar una posición
     # que será también la home position
@@ -119,18 +120,66 @@ def _uploadMission (self, mission, callback=None, params = None):
         0, 0, 0, 0,
         lat, alt, takOffAlt
     ))
-    seq = 2
+    seq += 1
 
     # Ahora añadimos los waypoints de la ruta
     for wp in waypoints:
-        wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
-            self.vehicle.target_system, self.vehicle.target_component, seq,
-            mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, True,
-            0, 0, 0, 0,
-            int(wp["lat"] * 10 ** 7), int(wp["lon"] * 10 ** 7), int(wp["alt"])
-        ))
-        seq += 1  # Increase waypoint sequence for the next waypoint
+        if 'lat' in list(wp.keys()):
+            wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
+                self.vehicle.target_system, self.vehicle.target_component, seq,
+                mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+                mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, True,
+                0, 0, 0, 0,
+                int(wp["lat"] * 10 ** 7), int(wp["lon"] * 10 ** 7), int(wp["alt"])
+            ))
+            seq += 1  # Increase waypoint sequence for the next waypoint
+        if 'rotAbs' in list(wp.keys()):
+            heading = wp['rotAbs']
+            print ('heading ', heading)
+            wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
+                self.vehicle.target_system, self.vehicle.target_component, seq,
+                mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+                mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, True,
+                int(heading), # heading
+                int (45), # velocidad de rotacion
+                int (1), # -1 ccw, 1 cw
+                int (0), # 0 absoluto, 1 relativo
+                0,0,0
+            ))
+            seq += 1  # Increase waypoint sequence for the next waypoint'''
+            wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
+                self.vehicle.target_system, self.vehicle.target_component, seq,
+                mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+                93, 0, True,
+                int(5),  # segundos
+                0,0,0,
+                0, 0, 0
+            ))
+            seq += 1  # Increase waypoint sequence for the next waypoint'''
+
+        if 'rotRel' in list(wp.keys()):
+            angle = wp['rotRel']
+            dir = wp['dir']
+            wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
+                self.vehicle.target_system, self.vehicle.target_component, seq,
+                mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+                mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, True,
+                int(angle),
+                int(45),  # velocidad de rotacion
+                int(dir),  # -1 ccw, 1 cw
+                int(1),  # 0 absoluto, 1 relativo
+                0, 0, 0
+            ))
+            seq += 1  # Increase waypoint sequence for the next waypoint'''
+            wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
+                self.vehicle.target_system, self.vehicle.target_component, seq,
+                mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+                93, 0, True,
+                int(5),  # segundos
+                0, 0, 0,
+                0, 0, 0
+            ))
+            seq += 1  # Increase waypoint sequence for the next waypoint'''
 
     # añadimos para acabar un RTL
     wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
@@ -146,6 +195,13 @@ def _uploadMission (self, mission, callback=None, params = None):
     while not msg:
         msg = self.vehicle.recv_match(type='MISSION_ACK', blocking=True, timeout = 3)'''
     msg = self.message_handler.wait_for_message('MISSION_ACK', timeout=3)
+    # miro si tengo que fijar la velocidad de navegación
+    if 'speed' in list(mission.keys()):
+        speed = mission['speed']*100    # la velocidad viene en m y hay que indicarla en cm
+        speedParameter = [{'ID': "WPNAV_SPEED", 'Value': speed}]
+        self.setParams(speedParameter)
+
+
     # Enviamos el numero de items de la nueva misión
     self.vehicle.waypoint_count_send(len(wploader))
 

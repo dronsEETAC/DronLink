@@ -1,5 +1,40 @@
 # La librería DronLink
 DronLink es una librería que pretende facilitar el desarrollo de aplicaciones de control del dron. Ofrece una amplia variedad de funcionalidades y se está diseñando con la mente puesta en las posibles necesidades del Drone Engineering Ecosystem (DEE).    
+
+# Proyecto Ejemplo
+
+Este es un proyecto de ejemplo que muestra cómo incluir una imagen alineada a la derecha en un archivo `README.md`.
+
+<p align="left">
+    Este texto está alineado a la izquierda y la imagen está a la derecha.
+    Puedes usar HTML dentro de Markdown para lograr este efecto.
+</p>
+
+<p align="right">
+    <img src="https://via.placeholder.com/150" alt="Ejemplo de imagen" width="150"/>
+</p>
+
+## Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/usuario/proyecto-ejemplo.git
+   ```
+2. Entra en el directorio del proyecto:
+   ```bash
+   cd proyecto-ejemplo
+   ```
+3. Instala las dependencias necesarias:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Uso
+
+Ejecuta el script principal con:
+```bash
+python main.py
+
  
 En este repositorio puede encontrarse el código de la librería y varias aplicaciones que demuestran su uso, en una variedad de contextos. Es importante tener presente que DronLink está en desarrollo y, por tanto, no exenta de errores.
 ## 1. Alternativa a DroneKit

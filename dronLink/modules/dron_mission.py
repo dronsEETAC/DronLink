@@ -52,6 +52,7 @@ def _getMission (self, callback=None, params = None):
 def _uploadMission (self, mission, callback=None, params = None):
     '''La mision debe especificarse con el formato de este ejemplo:
         {
+            "speed": 7,
             "takeOffAlt": 5,
             "waypoints":
                 [
@@ -60,11 +61,13 @@ def _uploadMission (self, mission, callback=None, params = None):
                         'lon': 1.9888285,
                         'alt': 12
                     },
+                    {'rotAbs': 90},
                     {
                         'lat': 41.27623,
                         'lon': 1.987,
                         'alt': 14
                     }
+                    {'rotRel': 90, 'dir': -1},
                 ]
 
         }

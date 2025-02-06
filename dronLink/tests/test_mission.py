@@ -1,16 +1,28 @@
 import json
+import time
 
 from dronLink.Dron import Dron
 
-def informar ():
-    global dron
+def aqui (index, wp):
+    print ('He llegado a: ', wp)
+    print ('Que esta en la posición: ', index )
+
+def ejecutar ():
+    global dron, mission
     print ('Ya he cargado la misión')
-    mission = dron.getMission()
-    if mission:
+    m = dron.getMission()
+    if m:
         print ('esta es la missión que he descargado: ')
-        print (json.dumps(mission, indent = 1))
+        print (json.dumps(m, indent = 1))
         print ('Ahora la voy a ejecutar')
         dron.executeMission()
+        print ('Mision finalizada')
+        time.sleep (10)
+        print ('Ahora la ejecuto en modo fligh plan')
+
+        dron.executeFlightPlan(mission, inWaypoint=aqui)
+        print('Terminó el plan de vuelo')
+
     else:
         print ('No hay mision')
 
@@ -33,6 +45,5 @@ mission = {
         ]
 }
 
-dron.uploadMission(mission, blocking = False, callback = informar)
-
+dron.uploadMission(mission, blocking = False, callback = ejecutar)
 

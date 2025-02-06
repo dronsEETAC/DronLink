@@ -59,7 +59,7 @@ class Dron(object):
     from dronLink.modules.dron_telemetry import send_telemetry_info, _send_telemetry_info, stop_sending_telemetry_info
 
     from dronLink.modules.dron_local_telemetry import send_local_telemetry_info, _send_local_telemetry_info, stop_sending_local_telemetry_info
-    from dronLink.modules.dron_mission import executeMission, _executeMission, uploadMission, _uploadMission, _getMission, getMission
+    from dronLink.modules.dron_mission import executeMission, _executeMission, uploadMission, _uploadMission, _getMission, getMission, executeFlightPlan, _executeFlightPlan
     from dronLink.modules.dron_altitude import change_altitude, _change_altitude
     from dronLink.modules.dron_drop import drop
     from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed, _checkSpeedZero

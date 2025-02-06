@@ -8,7 +8,7 @@ from pymavlink import mavutil
 
 
 
-def _getMission (self, callback=None, params = None):
+def _getMission2 (self, callback=None, params = None):
     mission = None
     # Solicitar la misión (waypoints) al autopiloto
     self.vehicle.mav.mission_request_list_send( self.vehicle.target_system,  self.vehicle.target_component)
@@ -28,6 +28,7 @@ def _getMission (self, callback=None, params = None):
     }
     # ahora espero los waypoints
     fin = False
+    ccc = 0
     while not fin:
         msg = self.message_handler.wait_for_message('MISSION_ITEM_INT')
         if msg.seq == 1:
@@ -35,10 +36,14 @@ def _getMission (self, callback=None, params = None):
             mission['takeOffAlt'] =  msg.z,
         elif msg.seq in range (2, count-1):
              # este es uno waypoints que hay que volar
-                mission ['waypoints'].append ({'lat':msg.x * 1e-7, 'lon':msg.y * 1e-7, 'alt':msg.z })
-        elif msg.seq == count-1:
-            # este waypoint es el RTL
-            fin = True
+                #mission ['waypoints'].append ({'lat':msg.x * 1e-7, 'lon':msg.y * 1e-7, 'alt':msg.z })
+                mission['waypoints'].append(msg)
+        #elif msg.seq == count-1:
+        ccc = ccc +1
+
+
+        # este waypoint es el RTL
+        fin = True
 
     if callback != None:
         if self.id == None:
@@ -47,6 +52,145 @@ def _getMission (self, callback=None, params = None):
             callback(self.id, mission)
     else:
         return mission
+
+
+
+
+def _getMission (self, callback=None, params = None):
+    mission = None
+    # Solicitar la misión (waypoints) al autopiloto
+    self.vehicle.mav.mission_request_list_send( self.vehicle.target_system,  self.vehicle.target_component)
+    # espero el numero de waypoints
+    msg = self.message_handler.wait_for_message('MISSION_COUNT')
+    count = msg.count
+    print ('count: ', count)
+    if count < 2:
+        # no hay misión
+            return None
+
+    mission_items = []
+    # Solicitar cada waypoint
+    for i in range(count):
+        self.vehicle.mav.mission_request_int_send( self.vehicle.target_system,  self.vehicle.target_component, i)
+        msg = self.message_handler.wait_for_message('MISSION_ITEM_INT')
+        mission_items.append (msg)
+    mission = {
+        'takeOffAlt': None,
+        'waypoints': []
+    }
+    for msg in mission_items:
+        if msg.command == 22:
+            mission['takeOffAlt'] = msg.z
+        elif msg.command == 16:
+            # el wp 0 lo ignoramos porque no pertenece a la estructura de la misión
+            if msg.seq !=0:
+                mission['waypoints'].append({'lat': msg.x * 1e-7, 'lon': msg.y * 1e-7, 'alt': msg.z})
+        elif msg.command == 115:
+            if msg.param4 == 0:
+                mission['waypoints'].append({'rotAbs': msg.param1})
+            else:
+                mission['waypoints'].append({'rotRel': msg.param1, 'dir': msg.param3})
+
+
+    if callback != None:
+        if self.id == None:
+            callback(mission)
+        else:
+            callback(self.id, mission)
+    else:
+        return mission
+
+
+def _executeFlightPlan (self, flightPlan, inWaypoint= None, callback=None, params = None):
+    '''El flightPlan debe especificarse con el formato de este ejemplo:
+        {
+            "speed": 7,
+            "takeOffAlt": 5,
+            "waypoints":
+                [
+                    {
+                        'lat': 41.2763410,
+                        'lon': 1.9888285,
+                        'alt': 12
+                    },
+                    {'rotAbs': 90},
+                    {
+                        'lat': 41.27623,
+                        'lon': 1.987,
+                        'alt': 14
+                    }
+                    {'rotRel': 90, 'dir': -1},
+                ]
+
+        }
+        El dron armará, despegara hasta la altura indicada, navegará por los waypoints y acabará
+        con un RTL
+        En el caso de que se haya especificado una funcion inWaypoint, al llegar a cada waypoint
+        se ejecutará esa función pasándole como parámetros el indice del waypoint en la lista y el
+        propio waypoint.
+        '''
+
+    if 'speed' in list(flightPlan.keys()):
+        speed = flightPlan['speed'] * 100  # la velocidad viene en m y hay que indicarla en cm
+        speedParameter = [{'ID': "WPNAV_SPEED", 'Value': speed}]
+        self.setParams(speedParameter)
+
+    takeOffAlt = flightPlan['takeOffAlt']
+
+    self.arm()
+    self.takeOff(takeOffAlt)
+
+    waypoints = flightPlan['waypoints']
+    for index,wp in enumerate(waypoints):
+        if 'lat' in list(wp.keys()):
+            self.goto (float (wp['lat']), float(wp['lon']), float (wp['alt']))
+            if inWaypoint:
+                inWaypoint (index,wp)
+        if 'rotAbs' in list(wp.keys()):
+            absoluteDegrees = wp['rotAbs']
+            self.vehicle.mav.command_long_send(
+                self.vehicle.target_system,
+                self.vehicle.target_component,
+                mavutil.mavlink.MAV_CMD_CONDITION_YAW,
+                0,
+                absoluteDegrees,  # param 1, yaw in degrees
+                45,  # param 2, yaw speed deg/s
+                1,  # param 3, direction -1 ccw, 1 cw
+                0,  # param 4, relative offset 1, absolute angle 0
+                0, 0, 0, 0)  # not used
+            time.sleep(5)
+
+        if 'rotRel' in list(wp.keys()):
+            angle = wp['rotRel']
+            dir = wp['dir']
+            self.vehicle.mav.command_long_send(
+                self.vehicle.target_system,
+                self.vehicle.target_component,
+                mavutil.mavlink.MAV_CMD_CONDITION_YAW,
+                0,
+                angle,  # param 1, yaw in degrees
+                45,  # param 2, yaw speed deg/s
+                int(dir),  # param 3, direction -1 ccw, 1 cw
+                1,  # param 4, relative offset 1, absolute angle 0
+                0, 0, 0, 0)  # not used
+            time.sleep(5)
+
+    self.RTL()
+
+
+    if callback != None:
+        if self.id == None:
+            if params == None:
+                callback()
+            else:
+                callback(params)
+        else:
+            if params == None:
+                callback(self.id)
+            else:
+                callback(self.id, params)
+
+
 
 
 def _uploadMission (self, mission, callback=None, params = None):
@@ -153,7 +297,7 @@ def _uploadMission (self, mission, callback=None, params = None):
             wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
                 self.vehicle.target_system, self.vehicle.target_component, seq,
                 mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-                93, 0, True,
+                mavutil.mavlink.MAV_CMD_NAV_DELAY,0, True,
                 int(5),  # segundos
                 0,0,0,
                 0, 0, 0
@@ -177,7 +321,7 @@ def _uploadMission (self, mission, callback=None, params = None):
             wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
                 self.vehicle.target_system, self.vehicle.target_component, seq,
                 mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-                93, 0, True,
+                mavutil.mavlink.MAV_CMD_NAV_DELAY,0, True,
                 int(5),  # segundos
                 0, 0, 0,
                 0, 0, 0
@@ -262,20 +406,14 @@ def _executeMission (self, callback=None, params = None):
         0, 0, 0, 0, 0, 0, 0, 0)
 
     self.state = 'flying'
-    # esperamos a que acabe la mision
+    #  damos un tiempo para que el dron esté en el aire
     time.sleep(10)
+    # esperamos a que acabe la mision
     msg = self.message_handler.wait_for_message(
         'GLOBAL_POSITION_INT',
         condition=self._checkOnHearth,
     )
-    '''while True:
-        msg = self.vehicle.recv_match(type='GLOBAL_POSITION_INT', blocking=True, timeout = 3)
-        if msg:
-            msg = msg.to_dict()
-            alt = float(msg['relative_alt'] / 1000)
-            if alt < 0.5:
-                break
-        time.sleep(0.1)'''
+
     self.state = 'connected'
     if callback != None:
         if self.id == None:
@@ -311,3 +449,11 @@ def getMission(self, blocking=True, callback=None, params = None):
     else:
         getMissionThread = threading.Thread(target=self._getMission, args=[callback, params])
         getMissionThread.start()
+
+def executeFlightPlan(self, mission, blocking=True, inWaypoint = None, callback=None, params = None):
+    if blocking:
+        return self._executeFlightPlan(mission, inWaypoint)
+
+    else:
+        executeMissionThread = threading.Thread(target=self._executeFlightPlan, args=[mission,inWaypoint, callback, params])
+        executeMissionThread.start()

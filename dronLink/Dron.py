@@ -64,4 +64,5 @@ class Dron(object):
     from dronLink.modules.dron_drop import drop
     from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed, _checkSpeedZero
     from dronLink.modules.dron_bottomGeofence  import startBottomGeofence, stopBottomGeofence,  _minAltChecking
+    from dronLink.modules.dron_RC_override import send_rc
     from dronLink.modules.message_handler import MessageHandler

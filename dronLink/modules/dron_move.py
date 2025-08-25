@@ -19,7 +19,10 @@ def _checkSpeedZero (self, msg):
 
 def _prepare_command_mov(self, step_x, step_y, step_z, bodyRef = False):
     if bodyRef:
-        msg =  mavutil.mavlink.MAVLink_set_position_target_local_ned_message(
+         # si navego en relación aal cuerpo del dron (adelante, atrás, etc) no quiero que cambie el heading
+
+         self.fixHeading()
+         msg =  mavutil.mavlink.MAVLink_set_position_target_local_ned_message(
             10,  # time_boot_ms (not used)
             self.vehicle.target_system,
             self.vehicle.target_component,
@@ -37,7 +40,12 @@ def _prepare_command_mov(self, step_x, step_y, step_z, bodyRef = False):
             0,
             0,
         )  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
+
+
     else:
+        # si navego en relación a los puntos cardinales si que quiero que cambie el heading
+
+        self.unfixHeading()
         msg = mavutil.mavlink.MAVLink_set_position_target_local_ned_message(
             10,  # time_boot_ms (not used)
             self.vehicle.target_system,
@@ -119,6 +127,56 @@ def _move_distance (self, direction, distance, callback=None, params = None):
                 callback(self.id)
             else:
                 callback(self.id, params)
+
+
+def _move_distance_2 (self, step_x, step_y):
+    self._stopGo()
+
+
+    cmd = mavutil.mavlink.MAVLink_set_position_target_local_ned_message(
+        10,  # time_boot_ms (not used)
+        self.vehicle.target_system,
+        self.vehicle.target_component,
+        mavutil.mavlink.MAV_FRAME_LOCAL_OFFSET_NED,  # frame
+        0b0000101111111000,  # type_mask (only speeds enabled)
+        step_x,
+        step_y,
+        0,  # x, y, z positions (not used)
+        0,
+        0,
+        0,  # x, y, z velocity in m/s
+        0,
+        0,
+        0,  # x, y, z acceleration (not supported yet, ignored in GCS_Mavlink)
+        0,
+        0,
+    )  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
+
+
+    self.vehicle.mav.send(cmd)
+    time.sleep (5)
+    # espero en este bucle hasta que se ha alcanzado el destino
+    # lo sabre porque la velocidad es cero
+    msg = self.message_handler.wait_for_message(
+        'GLOBAL_POSITION_INT',
+        condition=self._checkSpeedZero,
+    )
+    '''  while True:
+        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
+        if msg:
+            msg = msg.to_dict()
+            vx =  float(msg['vx'])
+            vy = float(msg['vy'])
+            vz = float(msg['vz'])
+            speed = math.sqrt( vx*vx+vy*vy+vz*vz)/100
+            if speed < 0.1:
+                break
+            time.sleep(0.25)'''
+
+
+
+
+
 
 def move_distance(self, direction, distance, blocking=True, callback=None, params = None):
     if blocking:

@@ -12,7 +12,11 @@ def _send_local_telemetry_info(self, process_local_telemetry_info):
         local_telemetry_info = {
             'posX': self.position[0],
             'posY': self.position[1],
-            'posZ': self.position[2]
+            'posZ': self.position[2],
+            'velX': self.speeds[0],
+            'velY': self.speeds[1],
+            'velZ': self.speeds[2],
+            'distance': self.distance
         }
         if self.id == None:
             process_local_telemetry_info (local_telemetry_info)

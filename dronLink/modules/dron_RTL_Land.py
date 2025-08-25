@@ -3,7 +3,8 @@ import time
 from pymavlink import mavutil
 
 def _checkOnHearth (self, msg):
-    return msg.relative_alt < 500
+    print ('altitud: ', msg.relative_alt)
+    return msg.relative_alt < 1000
 
 def _goDown(self, mode, callback=None, params = None):
     # detemenos el modo navegación
@@ -20,8 +21,9 @@ def _goDown(self, mode, callback=None, params = None):
         'GLOBAL_POSITION_INT',
         condition=self._checkOnHearth,
     )
+    print ('ya estoy en tierra')
 
-    self.vehicle.motors_disarmed_wait()
+    #self.vehicle.motors_disarmed_wait()
     self.state = "connected"
     if callback != None:
         if self.id == None:
@@ -35,7 +37,7 @@ def _goDown(self, mode, callback=None, params = None):
             else:
                 callback(self.id, params)
 
-
+    print('retorno ya')
 def RTL (self, blocking=True, callback=None, params = None):
     if self.state == 'flying':
         self.state = 'returning'
@@ -53,6 +55,7 @@ def Land (self, blocking=True, callback=None, params = None):
         self.state = 'landing'
         if blocking:
             self._goDown('LAND')
+            print('retorno ya 2')
         else:
             print ('aterrizo el dron ', self.id)
             goingDownThread = threading.Thread(target=self._goDown, args=['LAND', callback, params])

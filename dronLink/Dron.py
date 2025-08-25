@@ -32,7 +32,8 @@ class Dron(object):
         self.step = 1 # se usa en dron_mov. Son los metros que mueve en cada paso
 
         self.position = [0,0,0] # se usa en dron_mov para identificar la posición del dron dentro del espacio
-        self.heading = 0
+        self.speeds = [0, 0, 0]
+        self.heading = None
         self.lastDirection = None
         self.flightMode = None
         self.minAltGeofence = 0
@@ -41,6 +42,9 @@ class Dron(object):
         # se usa para parar la captura de datos de telemetria para que no molesten cuando quiero
         # leer parámetros
 
+        self.distance = None
+        self.conversor = None
+
     # aqui se importan los métodos de la clase Dron, que están organizados en ficheros.
     # Así podría orgenizarse la aportación de futuros alumnos que necesitasen incorporar nuevos servicios
     # para sus aplicaciones. Crearían un fichero con sus nuevos métodos y lo importarían aquí
@@ -48,11 +52,12 @@ class Dron(object):
     # ese atributo hay que declararlo aqui y no en el fichero con los métodos nuevos.
     # Ese es el caso del atributo going, que lo tengo que declarar aqui y preferiría poder declararlo en el fichero dron_goto
 
-    from dronLink.modules.dron_connect import connect, _connect, disconnect, _handle_heartbeat, _record_telemetry_info, _record_local_telemetry_info, reboot
+    from dronLink.modules.dron_connect import connect, _connect, disconnect, _handle_heartbeat, _record_telemetry_info, _record_local_telemetry_info, reboot, _record_distance
     from dronLink.modules.dron_arm import arm, _arm, setFlightMode
     from dronLink.modules.dron_takeOff import takeOff, _takeOff, _checkAltitudeReached
     from dronLink.modules.dron_RTL_Land import  RTL, Land, _goDown, _checkOnHearth
-    from dronLink.modules.dron_nav import _prepare_command, go, _startGo, _stopGo, _goingTread, changeHeading, _changeHeading, fixHeading, unfixHeading, changeNavSpeed, _checkHeadingReached
+    from dronLink.modules.dron_nav import _prepare_command, go, _startGo, _stopGo, _goingTread, changeNavSpeed
+    from dronLink.modules.dron_heading import changeHeading, _changeHeading, fixHeading, unfixHeading, _checkHeadingReached, rotate, _rotate
     from dronLink.modules.dron_goto import goto, _goto, _distanceToDestinationInMeters
     from dronLink.modules.dron_parameters import getParams, _getParams, setParams, _setParams, _checkParameter
     from dronLink.modules.dron_geofence import  setScenario, _setScenario, getScenario, _getScenario, _buildScenario
@@ -62,7 +67,10 @@ class Dron(object):
     from dronLink.modules.dron_mission import executeMission, _executeMission, uploadMission, _uploadMission, _getMission, getMission, executeFlightPlan, _executeFlightPlan
     from dronLink.modules.dron_altitude import change_altitude, _change_altitude
     from dronLink.modules.dron_drop import drop
-    from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed, _checkSpeedZero
+    from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed, _checkSpeedZero, _move_distance_2
     from dronLink.modules.dron_bottomGeofence  import startBottomGeofence, stopBottomGeofence,  _minAltChecking
     from dronLink.modules.dron_RC_override import send_rc
     from dronLink.modules.message_handler import MessageHandler
+    from dronLink.modules.dron_minAltitude import CheckMinAlt, _CheckMinAlt, StopCheckingMinAlt
+    from dronLink.modules.dron_inDoor import CrearEscenarioInDoor, Canvas_a_NED, NED_a_Canvas, ActivaGeofenceIndoor,_ActivaGeofenceIndoor,_catetos_semejantes,_punto_en_poligono, EstablecerGeofences, TransformadorNEDCanvasEscalado
+    #from dronLink.modules.dron_minAlt import CheckMinAlt, _CheckMinAlt, clear_overrides, send_throttle_up, catetos_semejantes, punto_en_poligono

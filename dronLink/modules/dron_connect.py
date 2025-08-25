@@ -17,6 +17,13 @@ def _handle_heartbeat(self, msg):
     if not 'Mode(0x000000' in str(mode):
             self.flightMode = mode
 
+def _record_distance(self, msg):
+    if msg:
+        if msg.orientation ==0:
+            self.distance = msg.current_distance
+
+
+
 
 
 def _record_telemetry_info(self, msg):
@@ -40,6 +47,7 @@ def _record_telemetry_info(self, msg):
 def _record_local_telemetry_info(self, msg):
     if msg:
         self.position = [msg.x, msg.y, msg.z]
+        self.speeds = [msg.vx, msg.vy, msg.vz]
 
 def _connect(self, connection_string, baud, callback=None, params=None):
     self.vehicle = mavutil.mavlink_connection(connection_string, baud)
@@ -54,6 +62,9 @@ def _connect(self, connection_string, baud, callback=None, params=None):
     self.message_handler.register_handler('HEARTBEAT', self._handle_heartbeat)
     self.message_handler.register_handler('GLOBAL_POSITION_INT', self._record_telemetry_info)
     self.message_handler.register_handler('LOCAL_POSITION_NED', self._record_local_telemetry_info)
+
+
+    self.message_handler.register_handler('DISTANCE_SENSOR', self._record_distance)
 
     # y ahora solicito los tipos de mensajes que quiero
     # Pido datos globales
@@ -70,6 +81,16 @@ def _connect(self, connection_string, baud, callback=None, params=None):
         self.vehicle.target_system, self.vehicle.target_component,
         mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL, 0,
         mavutil.mavlink.MAVLINK_MSG_ID_LOCAL_POSITION_NED,  # The MAVLink message ID
+        1e6 / self.frequency,
+        0, 0, 0, 0,  # Unused parameters
+        0
+    )
+
+    # Pido también datos locales
+    self.vehicle.mav.command_long_send(
+        self.vehicle.target_system, self.vehicle.target_component,
+        mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL, 0,
+        mavutil.mavlink.MAVLINK_MSG_ID_DISTANCE_SENSOR,  # The MAVLink message ID
         1e6 / self.frequency,
         0, 0, 0, 0,  # Unused parameters
         0
@@ -110,6 +131,7 @@ def connect(self,
 def disconnect(self):
     if self.state == 'connected':
         self.state = "disconnected"
+        self.message_handler.stop()
         # paramos el envío de datos de telemetría
         self.stop_sending_telemetry_info()
         self.stop_sending_local_telemetry_info()

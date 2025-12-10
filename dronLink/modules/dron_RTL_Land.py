@@ -3,7 +3,6 @@ import time
 from pymavlink import mavutil
 
 def _checkOnHearth (self, msg):
-    print ('altitud: ', msg.relative_alt)
     return msg.relative_alt < 1000
 
 def _goDown(self, mode, callback=None, params = None):

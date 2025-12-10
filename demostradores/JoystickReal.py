@@ -4,7 +4,7 @@ import time
 import pywinusb.hid as hid
 
 class Joystick:
-    def __init__(self, dron, idCallback,  num = 0):
+    def __init__(self, dron, idCallback=None,  num = 0):
         ''' El usuario puede tener varios joystics conectados al portátil. El num es un valor mayor
         o igual a 0 que indica cuál de los joystics conectados va a controlar al dron que se recibe.
         Los joystics pueden ser conectados por cable o inalambricos. Es importante identificar qué tipo
@@ -92,44 +92,24 @@ class Joystick:
         pitch = self.map_axis(axes [self.pitch])  # RC2: Pitch
         throttle = self.map_axis(-axes[1])  # RC3: Throttle
         yaw = self.map_axis(axes[0])  # RC4: Yaw
-        self.dron.send_rc(roll, pitch, throttle, yaw)
+        if self.dron.flightMode == 'LOITER':
+            self.dron.send_rc(roll, pitch, throttle, yaw)
 
-        if buttons[8] == 1:
+        if buttons[6] == 1:
             print ('vamos a armar el dron ', self.id)
             self.dron.arm()
+            self.dron.setFlightMode('LOITER')
             print("Armado")
-        if buttons[9] == 1:
-            print('vamos a despegar el dron ', self.id)
-            self.dron.takeOff(5, blocking=False)
-            print("Despegando")
+
 
         if buttons[0] == 1:
             self.dron.RTL(blocking=False)
             print("Retornado")
-        if buttons[1] == 1:
-            ''' puesto que el cambio de modo es bloqueante, cuando se ha realizado el programa recibe
-                       los mensajes retrasados del joystick inalambrico, lo cual bloquea el sistema. 
-                       Por tanto solo hago caso al joystick si aun no estamos en Guided
-                       '''
-            if self.dron.flightMode != 'GUIDED':
-                print('voy a poner modo ')
-                self.dron.setFlightMode('GUIDED')
-                print("Modo Guided")
 
         if buttons[2] == 1:
             self.dron.Land(blocking=False)
             print("Aterrizado")
-        if buttons[3] == 1:
-            ''' puesto que el cambio de modo es bloqueante, cuando se ha realizado el programa recibe
-            los mensajes retrasados del joystick inalambrico, lo cual bloquea el sistema. 
-            Por tanto solo hago caso al joystick si aun no estamos en loiter
-            '''
-            if self.dron.flightMode != 'LOITER':
-                print('voy a poner modo ')
-                self.dron.setFlightMode('LOITER')
-                print("Modo Loiter")
-        if buttons[4] == 1:
-            self.idCallBack(self.id)
+
     def control_loop (self):
         # con este parametro hacemos que el dron no exija que el throttle esté al mínimo para armar
         params = [{'ID': "PILOT_THR_BHV", 'Value': 1}]

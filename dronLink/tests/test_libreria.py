@@ -3,7 +3,7 @@ import time
 from dronLink.Dron import Dron
 
 dron = Dron ()
-connection_string = 'tcp:127.0.0.1:5763'
+connection_string = 'tcp:127.0.0.1:5762'
 baud = 115200
 '''connection_string = 'com13'
 baud = 4800'''
@@ -11,13 +11,13 @@ dron.connect(connection_string, baud)
 print ('conectado')
 dron.arm()
 print ('ya he armado')
-dron.takeOff (15)
+dron.takeOff (10)
 print ('ya he alcanzado al altitud indicada. Espero 5 segundos')
-time.sleep (5)
-dron.fixHeading()
+#time.sleep (5)
+#dron.fixHeading()
 print ('vamos hacia delante durante 5 segundos')
 dron.go('Forward')
-time.sleep (15)
+time.sleep (10)
 dron.go('Left')
 time.sleep (15)
 dron.changeNavSpeed(0.5)

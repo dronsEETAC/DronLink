@@ -43,7 +43,7 @@ class Dron(object):
         # leer parámetros
 
         self.distance = None
-        self.conversor = None
+
 
     # aqui se importan los métodos de la clase Dron, que están organizados en ficheros.
     # Así podría orgenizarse la aportación de futuros alumnos que necesitasen incorporar nuevos servicios
@@ -52,13 +52,13 @@ class Dron(object):
     # ese atributo hay que declararlo aqui y no en el fichero con los métodos nuevos.
     # Ese es el caso del atributo going, que lo tengo que declarar aqui y preferiría poder declararlo en el fichero dron_goto
 
-    from dronLink.modules.dron_connect import connect, _connect, disconnect, _handle_heartbeat, _record_telemetry_info, _record_local_telemetry_info, reboot, _record_distance
+    from dronLink.modules.dron_connect import connect, _connect, disconnect, _handle_heartbeat, _record_telemetry_info, _record_local_telemetry_info, reboot, _record_battery_info
     from dronLink.modules.dron_arm import arm, _arm, setFlightMode
     from dronLink.modules.dron_takeOff import takeOff, _takeOff, _checkAltitudeReached
     from dronLink.modules.dron_RTL_Land import  RTL, Land, _goDown, _checkOnHearth
     from dronLink.modules.dron_nav import _prepare_command, go, _startGo, _stopGo, _goingTread, changeNavSpeed
     from dronLink.modules.dron_heading import changeHeading, _changeHeading, fixHeading, unfixHeading, _checkHeadingReached, rotate, _rotate
-    from dronLink.modules.dron_goto import goto, _goto, _distanceToDestinationInMeters
+    from dronLink.modules.dron_goto import goto, _goto, _distanceToDestinationInMeters, _gotoLocal, gotoLocal, _checkLocalArrived, _checkGlobalArrived,_distancia_geografica
     from dronLink.modules.dron_parameters import getParams, _getParams, setParams, _setParams, _checkParameter
     from dronLink.modules.dron_geofence import  setScenario, _setScenario, getScenario, _getScenario, _buildScenario
     from dronLink.modules.dron_telemetry import send_telemetry_info, _send_telemetry_info, stop_sending_telemetry_info
@@ -72,5 +72,9 @@ class Dron(object):
     from dronLink.modules.dron_RC_override import send_rc
     from dronLink.modules.message_handler import MessageHandler
     from dronLink.modules.dron_minAltitude import CheckMinAlt, _CheckMinAlt, StopCheckingMinAlt
-    from dronLink.modules.dron_inDoor import CrearEscenarioInDoor, Canvas_a_NED, NED_a_Canvas, ActivaGeofenceIndoor,_ActivaGeofenceIndoor,_catetos_semejantes,_punto_en_poligono, EstablecerGeofences, TransformadorNEDCanvasEscalado
-    #from dronLink.modules.dron_minAlt import CheckMinAlt, _CheckMinAlt, clear_overrides, send_throttle_up, catetos_semejantes, punto_en_poligono
+    from dronLink.modules.dron_inDoor import  ActivaLimitesIndoor,_ActivaLimitesIndoor
+    from dronLink.modules.dron_inDoor import EstablecerLimites,DesactivaLimitesIndoor, ActivaLimitesIndoor,ConfiguraVueloExterior, SetHome
+    from dronLink.modules.dron_inDoor import _distancia_punto_a_segmento, _distancia_minima_punto_a_poligono
+    from dronLink.modules.dron_distanceSensor import _record_distance_info, _send_info, send_distance_sensor_info, stop_sending_distance_sensor_info, ConfigureDistanceSensor
+
+    from dronLink.modules.dron_prueba_altitud import prueba, distancia

@@ -132,7 +132,7 @@ def getScenario(self, blocking=True, callback=None):
         getScenarioThread= threading.Thread(target=self._getScenario, args=[callback])
         getScenarioThread.start()
 
-def _setScenario(self, scenario, callback=None, params = None):
+def _setScenario(self, scenario, brench = None, callback=None, params = None):
     '''
     El escenario se recibe en forma de lista. En cada posición hay un fence que representan areas.
     El primer elemento de la lista es un fence de inclusión, que representa el área de la que el dron no va a salir.
@@ -180,6 +180,9 @@ def _setScenario(self, scenario, callback=None, params = None):
 
     El escenario tiene 4 fences. El primero es el de inclusión, de tipo 'polygon'. Luego tiene 3 fences de exclusión que
     representan los obstaculos. Los dos primeros son de tipo 'polygon' y el tercero es de tipo 'circle'.
+
+    El parámetro brench es una función a la que llamaremos en el caso de que se produzca una violación de alguno de
+    los fences del escenario
 
     '''
     wploader = [] # aqui prepararemos lo comandos correspondientes a cada item del escenario
@@ -302,7 +305,11 @@ def _setScenario(self, scenario, callback=None, params = None):
                 break
 
     msg = self.message_handler.wait_for_message('MISSION_ACK', timeout=3)
-    print("Mission ack enviado")
+    print("Mission ack recibido")
+    # si tenemos que avisar en caso de violación de alguno de los fences, pedimos mensajes para averiguar
+    # y pedimos que ejecuten el callback del usuario si eso ocurre
+    if brench:
+        self.message_handler.register_handler('FENCE_STATUS',brench)
 
     if callback != None:
         if self.id == None:
@@ -316,9 +323,9 @@ def _setScenario(self, scenario, callback=None, params = None):
             else:
                 callback(self.id, params)
 
-def setScenario (self,scenario, blocking=True, callback=None, params = None):
+def setScenario (self,scenario, blocking=True,  brench = None, callback=None, params = None):
     if blocking:
         return self._setScenario(scenario)
     else:
-        scenarioThread = threading.Thread(target=self._setScenario, args=[scenario,callback, params])
+        scenarioThread = threading.Thread(target=self._setScenario, args=[scenario,brench, callback, params])
         scenarioThread.start()

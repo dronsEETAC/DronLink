@@ -195,9 +195,8 @@ def setMoveSpeed (self, speed):
         0, 0,  # Sistema y componente (0 para sistema no tripulado)
         mavutil.mavlink.MAV_CMD_DO_CHANGE_SPEED,  # Comando para cambiar la velocidad de navegación
         0,  # Confirmando
-        0,  # Velocidad vertical (sin cambios)
-        speed,  # Velocidad de navegación (m/s)
-        -1,  # Velocidad máxima (-1 para no limitar)
-        0, 0, 0, 0)  # Parámetros adicionales (no utilizados)
+        0,
+        speed,  # Velocidad máxima (-1 para no limitar)
+        0, 0, 0,0, 0)  # Parámetros adicionales (no utilizados)
     self.vehicle.mav.send(msg)
 

@@ -2,6 +2,11 @@ import json
 
 from dronLink.Dron import Dron
 
+
+def AvisoBrench (mensaje):
+    print ("Brenchhhhhhhhhhh")
+    print(mensaje)
+
 def informar ():
     global dron
     print ('Comprueba ahora con Mission Planner que se ha cargado el escenario:\n'
@@ -10,12 +15,14 @@ def informar ():
     scenario = dron.getScenario()
     print ('Este es el escenario que hay en este momento en el autopiloto')
     print (json.dumps(scenario, indent = 1))
+    a = input ("Pulsa cualquier tecla para acabar")
 
 
 dron = Dron ()
 connection_string = 'tcp:127.0.0.1:5763'
 baud = 115200
 dron.connect(connection_string, baud)
+dron.changeNavSpeed(3)
 print ('conectado')
 #dron.getGEOFence()
 scenario = [
@@ -52,4 +59,4 @@ scenario = [
          'lon': 1.9883953
      }
 ]
-dron.setScenario(scenario, blocking = False, callback = informar)
+dron.setScenario(scenario, blocking = False, brench = AvisoBrench, callback = informar)

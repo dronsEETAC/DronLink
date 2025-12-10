@@ -13,7 +13,6 @@ def _getParams(self,parameters,  callback=None):
     # esta es la nueva versión,
     # ahora primero encolamos el handler, luego pedimos el parámetro y después nos quedamos a la espera
     # de que llegue el parámetro. Así, cuando llegue el parámetro seguro que ya está encolado el handler.
-    print ('vamos a leer los parámetros')
     result = []
     i =0
     for PARAM in parameters:
@@ -43,7 +42,6 @@ def _getParams(self,parameters,  callback=None):
                     })
                     ready = True
                     i= i+1
-                    print ('ya tengo parámetro '+str(i)+ ' de '+ str(len(parameters)))
 
 
     if callback != None:

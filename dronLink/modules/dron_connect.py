@@ -13,18 +13,11 @@ def _handle_heartbeat(self, msg):
     if msg.base_mode == 89 and self.state == 'armed':
         self.state = 'connected'
         print ('Ne acabo de desarmar')
+    if msg.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED and self.state == 'connected':
+        self.state = 'armed'
     mode = mavutil.mode_string_v10(msg)
     if not 'Mode(0x000000' in str(mode):
-            self.flightMode = mode
-
-def _record_distance(self, msg):
-    if msg:
-        if msg.orientation ==0:
-            self.distance = msg.current_distance
-
-
-
-
+        self.flightMode = mode
 
 def _record_telemetry_info(self, msg):
     if msg:
@@ -34,7 +27,7 @@ def _record_telemetry_info(self, msg):
         self.lon = float(msg['lon'] / 10 ** 7)
         self.alt = float(msg['relative_alt'] / 1000)
         self.heading = float(msg['hdg'] / 100)
-        if self.state == 'connected' and self.alt > 0.5:
+        if self.state == 'armed' and self.alt > 0.5:
             self.state = 'flying'
         if self.state == 'flying' and self.alt < 0.5:
             self.state = 'connected'
@@ -48,6 +41,11 @@ def _record_local_telemetry_info(self, msg):
     if msg:
         self.position = [msg.x, msg.y, msg.z]
         self.speeds = [msg.vx, msg.vy, msg.vz]
+def _record_battery_info(self, msg):
+    if msg:
+        '''self.position = [msg.x, msg.y, msg.z]
+        self.speeds = [msg.vx, msg.vy, msg.vz]'''
+        print ("Bateria: ", msg)
 
 def _connect(self, connection_string, baud, callback=None, params=None):
     self.vehicle = mavutil.mavlink_connection(connection_string, baud)
@@ -62,9 +60,7 @@ def _connect(self, connection_string, baud, callback=None, params=None):
     self.message_handler.register_handler('HEARTBEAT', self._handle_heartbeat)
     self.message_handler.register_handler('GLOBAL_POSITION_INT', self._record_telemetry_info)
     self.message_handler.register_handler('LOCAL_POSITION_NED', self._record_local_telemetry_info)
-
-
-    self.message_handler.register_handler('DISTANCE_SENSOR', self._record_distance)
+    self.message_handler.register_handler('SYS_STATUS', self._record_battery_info)
 
     # y ahora solicito los tipos de mensajes que quiero
     # Pido datos globales
@@ -86,15 +82,6 @@ def _connect(self, connection_string, baud, callback=None, params=None):
         0
     )
 
-    # Pido también datos locales
-    self.vehicle.mav.command_long_send(
-        self.vehicle.target_system, self.vehicle.target_component,
-        mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL, 0,
-        mavutil.mavlink.MAVLINK_MSG_ID_DISTANCE_SENSOR,  # The MAVLink message ID
-        1e6 / self.frequency,
-        0, 0, 0, 0,  # Unused parameters
-        0
-    )
 
     if callback != None:
         if self.id == None:

@@ -41,11 +41,12 @@ def _record_local_telemetry_info(self, msg):
     if msg:
         self.position = [msg.x, msg.y, msg.z]
         self.speeds = [msg.vx, msg.vy, msg.vz]
+
 def _record_battery_info(self, msg):
     if msg:
-        '''self.position = [msg.x, msg.y, msg.z]
-        self.speeds = [msg.vx, msg.vy, msg.vz]'''
-        print ("Bateria: ", msg)
+        self.voltage_battery =  msg.voltage_battery / 1000.0
+        self.current_battery = msg.current_battery / 100.0
+        self.battery_remaining = msg.battery_remaining
 
 def _connect(self, connection_string, baud, callback=None, params=None):
     self.vehicle = mavutil.mavlink_connection(connection_string, baud)
@@ -60,6 +61,14 @@ def _connect(self, connection_string, baud, callback=None, params=None):
     self.message_handler.register_handler('HEARTBEAT', self._handle_heartbeat)
     self.message_handler.register_handler('GLOBAL_POSITION_INT', self._record_telemetry_info)
     self.message_handler.register_handler('LOCAL_POSITION_NED', self._record_local_telemetry_info)
+    # activo el envío de todos los streams porque necesito los datos de bateria
+    self.vehicle.mav.request_data_stream_send(
+        self.vehicle.target_system,
+        self.vehicle.target_component,
+        mavutil.mavlink.MAV_DATA_STREAM_ALL,
+        10,
+        1
+    )
     self.message_handler.register_handler('SYS_STATUS', self._record_battery_info)
 
     # y ahora solicito los tipos de mensajes que quiero

@@ -18,6 +18,9 @@ class Dron(object):
         self.lon = 0
         self.alt = 0
         self.groundSpeed = 0
+        self.voltage_battery = 0
+        self.current_battery =0  # amperios
+        self.battery_remaining = 0 # %
 
         self.frequency = None  #numero de muestras de telemetría por segundo
 

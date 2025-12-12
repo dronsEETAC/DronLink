@@ -12,8 +12,8 @@ def procesarTelemetria (telemetryInfo ):
     print ('global:', telemetryInfo)
 def procesarTelemetriaLocal (telemetryInfo ):
     print ('local:' , telemetryInfo)
-#dron.send_telemetry_info(procesarTelemetria)
+dron.send_telemetry_info(procesarTelemetria)
 #time.sleep (10)
-dron.send_local_telemetry_info(procesarTelemetriaLocal)
+#dron.send_local_telemetry_info(procesarTelemetriaLocal)
 while True:
     pass

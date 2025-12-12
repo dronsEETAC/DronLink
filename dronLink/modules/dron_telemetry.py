@@ -17,7 +17,10 @@ def _send_telemetry_info(self, process_telemetry_info):
             'groundSpeed':  self.groundSpeed,
             'heading': self.heading,
             'state': self.state,
-            'flightMode': self.flightMode
+            'flightMode': self.flightMode,
+            'voltage_battery': self.voltage_battery,
+            'current_battery': self.current_battery,
+            'battery_remaining': self.battery_remaining
         }
         # llamo al callback
         if self.id == None:

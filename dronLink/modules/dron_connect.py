@@ -13,8 +13,10 @@ def _handle_heartbeat(self, msg):
     if msg.base_mode == 89 and self.state == 'armed':
         self.state = 'connected'
         print ('Ne acabo de desarmar')
-    if msg.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED and self.state == 'connected':
+    '''if msg.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED and self.state == 'connected':
+        print ("Vuelo a armar")
         self.state = 'armed'
+        '''
     mode = mavutil.mode_string_v10(msg)
     if not 'Mode(0x000000' in str(mode):
         self.flightMode = mode

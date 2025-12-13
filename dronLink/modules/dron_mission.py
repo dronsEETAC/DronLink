@@ -138,6 +138,7 @@ def _executeFlightPlan (self, flightPlan, inWaypoint= None, callback=None, param
     takeOffAlt = flightPlan['takeOffAlt']
 
     self.arm()
+
     self.takeOff(takeOffAlt)
 
     waypoints = flightPlan['waypoints']
@@ -413,7 +414,14 @@ def _executeMission (self, callback=None, params = None):
         'GLOBAL_POSITION_INT',
         condition=self._checkOnHearth,
     )
-
+    '''   self.vehicle.mav.command_long_send(
+        self.vehicle.target_system,
+        self.vehicle.target_component,
+        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+        0,  # confirmation
+        0,  # param1 = 0 → DESARMAR
+        0, 0, 0, 0, 0, 0
+    )'''
     self.state = 'connected'
     if callback != None:
         if self.id == None:

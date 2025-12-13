@@ -6,14 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="ad13557a-bc40-4667-a076-b3f5c03cd602" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/Dron.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/Dron.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_arm.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_arm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_connect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_telemetry.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_telemetry.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/tests/WebRTCServer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/tests/prueba.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/tests/pruebaImagen.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/tests/test_telemetry_info.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/tests/test_telemetry_info.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/tests/videoSreamWebRTC.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_goto.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_goto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_mission.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_mission.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/tests/test_mission.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/tests/test_mission.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +62,7 @@
     "Python.test_inDoor.executor": "Run",
     "Python.test_libreria.executor": "Run",
     "Python.test_minAltCheck.executor": "Run",
+    "Python.test_mission.executor": "Run",
     "Python.test_mov.executor": "Run",
     "Python.test_nav.executor": "Run",
     "Python.test_rotate.executor": "Run",
@@ -86,7 +84,7 @@
       <recent name="C:\Users\Miguel\Documents\Miguel\DEE\DronLink\dronLink\modules" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_telemetry_info">
+  <component name="RunManager" selected="Python.test_mission">
     <configuration name="DashboardVueloInteriores" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DronLink" />
       <option name="ENV_FILES" value="" />
@@ -131,7 +129,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pruebaDetectarBrench" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="test_mission" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DronLink" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -144,7 +142,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dronLink/tests/pruebaDetectarBrench.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dronLink/tests/test_mission.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -196,11 +194,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test_mission" />
         <item itemvalue="Python.test_telemetry_info" />
         <item itemvalue="Python.pruebaBateria" />
         <item itemvalue="Python.DashboardVueloInteriores" />
         <item itemvalue="Python.test_scenario" />
-        <item itemvalue="Python.pruebaDetectarBrench" />
       </list>
     </recent_temporary>
   </component>

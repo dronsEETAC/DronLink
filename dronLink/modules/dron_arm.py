@@ -34,6 +34,7 @@ def _arm(self, callback=None, params = None):
 
 
 def arm(self, blocking=True, callback=None, params = None):
+    print ("Estado: ", self.state)
     if self.state == 'connected':
         if blocking:
             self._arm()

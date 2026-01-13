@@ -8,6 +8,7 @@ el nuevo rumbo (north, south, etc).
 Para acabar la navegación hay que ejecutar el método stopGo
 
 '''
+import logging
 import threading
 import time
 from pymavlink import mavutil
@@ -91,6 +92,8 @@ def changeNavSpeed (self, speed):
     self.navSpeed = speed
     newParameters = [{'ID': "WPNAV_SPEED", 'Value': speed*100}]
     self.setParams(newParameters)
+    if self.verbose:
+        logging.info("Nueva velocidad de navegación: %s", str(speed))
     # vuelvo a ordenar que navegue en la dirección en la que estaba navegando
     self.go (self.direction)
 
@@ -131,6 +134,7 @@ def go(self, direction):
             self.cmd = self._prepare_command(0, 0, -speed, bodyRef=True)
         if direction == "Down":
             self.cmd = self._prepare_command(0, 0, speed, bodyRef=True)
-
+        if self.verbose:
+                logging.info("Navego en dirección %s", str(direction))
 
 

@@ -1,3 +1,4 @@
+import logging
 import threading
 from pymavlink import mavutil
 import pymavlink.dialects.v20.all as dialect
@@ -16,6 +17,8 @@ def fixHeading (self):
                                                         target_component=self.vehicle.target_component, param_id='WP_YAW_BEHAVIOR'.encode("utf-8"),
                                                         param_value=0, param_type=dialect.MAV_PARAM_TYPE_REAL32)
     self.vehicle.mav.send(message)
+    if self.verbose:
+        logging.info("Fijo el heading")
 
 def unfixHeading (self):
     # al des-fijar el heading el dron cambiará el heading según la dirección de navegación.
@@ -23,6 +26,8 @@ def unfixHeading (self):
                                                         target_component=self.vehicle.target_component, param_id='WP_YAW_BEHAVIOR'.encode("utf-8"),
                                                         param_value=1, param_type=dialect.MAV_PARAM_TYPE_REAL32)
     self.vehicle.mav.send(message)
+    if self.verbose:
+        logging.info("Libero el heading")
 
 
 def _changeHeading (self, absoluteDegrees, callback=None, params = None):
@@ -38,21 +43,16 @@ def _changeHeading (self, absoluteDegrees, callback=None, params = None):
         1, # param 3, direction -1 ccw, 1 cw
         0, # param 4, relative offset 1, absolute angle 0
         0, 0, 0, 0) # not used
-
+    if self.verbose:
+        logging.info("Inicio cambio de heading a: %s", str(absoluteDegrees))
     # espero hasta que haya alcanzado la orientación indicada
     msg = self.message_handler.wait_for_message(
         'GLOBAL_POSITION_INT',
         condition = self._checkHeadingReached,
         params = absoluteDegrees
     )
-    '''while True:
-        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
-        if msg:
-            msg = msg.to_dict()
-            heading = float(msg['hdg'] / 100)
-            if abs(heading-absoluteDegrees) < 5:
-                break
-            time.sleep(0.25)'''
+    if self.verbose:
+        logging.info("Cambio de heading completado")
     if callback != None:
         if self.id == None:
             if params == None:
@@ -88,21 +88,16 @@ def _rotate (self, offset,direction = 'cw', callback=None, params = None):
         dir, # param 3, direction -1 ccw, 1 cw
         1, # param 4, relative offset 1, absolute angle 0
         0, 0, 0, 0) # not used
-
+    if self.verbose:
+        logging.info("Inicio rotación de %s grados", str(offset))
     # espero hasta que haya alcanzado la orientación indicada
     msg = self.message_handler.wait_for_message(
         'GLOBAL_POSITION_INT',
         condition = self._checkHeadingReached,
         params = finalHeading
     )
-    '''while True:
-        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
-        if msg:
-            msg = msg.to_dict()
-            heading = float(msg['hdg'] / 100)
-            if abs(heading-absoluteDegrees) < 5:
-                break
-            time.sleep(0.25)'''
+    if self.verbose:
+        logging.info("Rotación completada")
     if callback != None:
         if self.id == None:
             if params == None:

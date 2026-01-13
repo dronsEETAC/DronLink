@@ -28,7 +28,7 @@ def ejecutar ():
 
 
 
-dron = Dron ()
+dron = Dron (verbose=True)
 connection_string = 'tcp:127.0.0.1:5763'
 baud = 115200
 dron.connect(connection_string, baud)

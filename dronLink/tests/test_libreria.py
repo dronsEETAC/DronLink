@@ -2,7 +2,7 @@ import time
 
 from dronLink.Dron import Dron
 
-dron = Dron ()
+dron = Dron (verbose= True)
 connection_string = 'tcp:127.0.0.1:5762'
 baud = 115200
 '''connection_string = 'com13'

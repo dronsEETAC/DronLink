@@ -1,4 +1,4 @@
-
+import logging
 import threading
 from pymavlink import mavutil
 
@@ -79,15 +79,17 @@ def _buildScenario (self, fencePoints):
 
 def _getScenario(self, callback=None):
     #pido el número de puntos del geofence
+    if self.verbose:
+        logging.info("Inicio la letura del escenario existente")
     self.vehicle.mav.param_request_read_send(
         self.vehicle.target_system,self.vehicle.target_component,
         'FENCE_TOTAL'.encode(encoding="utf-8"),
         -1
     )
     message = self.message_handler.wait_for_message('PARAM_VALUE')
-    print ('recibo fence total ', message)
     if message is None:
-        print ('nada')
+        if self.verbose:
+            logging.info("No hay ningún escenario")
         if callback:
             callback(None)
         else:
@@ -95,7 +97,8 @@ def _getScenario(self, callback=None):
     else:
         message = message.to_dict()
     total = int(message["param_value"])
-    print ('total ', total)
+    if self.verbose:
+        logging.info("Hay un escenario con %s waypoints", str(total))
     if total == 0:
         # no hay fence
         return None
@@ -107,13 +110,16 @@ def _getScenario(self, callback=None):
             # solicito el punto siguiente
             self.vehicle.mav.mission_request_int_send(self.vehicle.target_system, self.vehicle.target_component, idx,
                                                 mavutil.mavlink.MAV_MISSION_TYPE_FENCE)
-            print ('espero el ', idx)
             msg = self.message_handler.wait_for_message('MISSION_ITEM_INT')
+            if self.verbose:
+                logging.info("Recibo el waypoint %s", str(idx))
             fencePoints.append (msg)
             idx = idx + 1
 
 
     scenario = self._buildScenario (fencePoints)
+    if self.verbose:
+        logging.info("Escenario preparado")
 
     if callback != None:
         if self.id == None:
@@ -189,9 +195,8 @@ def _setScenario(self, scenario, brench = None, callback=None, params = None):
     seq = 0
     # el fence de inclusión es el primero de la lista
     inclusionFence = scenario[0]
-    print(f"scenario: {scenario}")
-    print(f"inclusionFence: {inclusionFence}")
-    print(f"Type of inclusionFence: {type(inclusionFence)}")
+    if self.verbose:
+        logging.info("Inicio envío de escenario")
     if inclusionFence['type'] == 'polygon':
         waypoints = inclusionFence ['waypoints']
 
@@ -283,7 +288,8 @@ def _setScenario(self, scenario, brench = None, callback=None, params = None):
                 ))
                 seq += 1
 
-    print ('envio contador')
+    if self.verbose:
+        logging.info("Envío el número de waypoints: %s", str( len (wploader)))
     # indicamos el número total de comandos que tenemos que enviar para crear el escenario
     self.vehicle.mav.mission_count_send(
         self.vehicle.target_system,
@@ -297,18 +303,20 @@ def _setScenario(self, scenario, brench = None, callback=None, params = None):
         # esperamos a que nos pida el siguiente
         msg = self.message_handler.wait_for_message('MISSION_REQUEST',  timeout=3)
         if msg:
-            print ('envio el wp ' + str( msg.seq) + ' de ' + str(len (wploader)-1))
+            if self.verbose:
+                logging.info("Envío el waypoint: %s", str( msg.seq))
             self.vehicle.mav.send(wploader[msg.seq])
             if msg.seq == len(wploader) - 1:
                 # ya los hemos enviado todos
-                print("Enviados todos")
                 break
-
+    if self.verbose:
+        logging.info("Enviados todos los waypoints")
     msg = self.message_handler.wait_for_message('MISSION_ACK', timeout=3)
-    print("Mission ack recibido")
     # si tenemos que avisar en caso de violación de alguno de los fences, pedimos mensajes para averiguar
     # y pedimos que ejecuten el callback del usuario si eso ocurre
     if brench:
+        if self.verbose:
+            logging.info("Registro el tratamiento de violación de fence")
         self.message_handler.register_handler('FENCE_STATUS',brench)
 
     if callback != None:

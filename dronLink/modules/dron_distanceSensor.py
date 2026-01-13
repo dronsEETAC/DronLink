@@ -7,7 +7,8 @@ def _record_distance_info(self, msg):
     if msg:
         print (msg)
         self.distance = msg.current_distance
-        #self.orientation = msg.orientation
+        if hasattr(msg, "orientation"):
+            self.orientation = msg.orientation
 
 def _send_info(self, process_distance_info, freq):
     self.sendDistanceInfo = True
@@ -15,7 +16,7 @@ def _send_info(self, process_distance_info, freq):
         # preparo el paquete de datos de distancia
         distance_info = {
             'distance': self.distance,
-            #'orientation': self.orientation,
+            'orientation': self.orientation,
         }
         # llamo al callback
         if self.id == None:

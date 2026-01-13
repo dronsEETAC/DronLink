@@ -1,4 +1,5 @@
 import json
+import logging
 import math
 import threading
 import time
@@ -8,6 +9,8 @@ from pymavlink import mavutil
 
 def _send_local_telemetry_info(self, process_local_telemetry_info):
     self.sendLocalTelemetryInfo = True
+    if self.verbose:
+        logging.info("Inicio envio de telemetría local")
     while self.sendLocalTelemetryInfo:
         local_telemetry_info = {
             'posX': self.position[0],
@@ -16,7 +19,6 @@ def _send_local_telemetry_info(self, process_local_telemetry_info):
             'velX': self.speeds[0],
             'velY': self.speeds[1],
             'velZ': self.speeds[2],
-            'distance': self.distance
         }
         if self.id == None:
             process_local_telemetry_info (local_telemetry_info)
@@ -31,3 +33,5 @@ def send_local_telemetry_info(self, process_local_telemetry_info):
 
 def stop_sending_local_telemetry_info(self):
     self.sendLocalTelemetryInfo = False
+    if self.verbose:
+        logging.info("Detengo envio de telemetría local")

@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 from pymavlink import mavutil
@@ -20,7 +21,8 @@ def _goDown(self, mode, callback=None, params = None):
         'GLOBAL_POSITION_INT',
         condition=self._checkOnHearth,
     )
-    print ('ya estoy en tierra')
+    if self.verbose:
+        logging.info("Dron en tierra")
 
     #self.vehicle.motors_disarmed_wait()
     self.state = "connected"
@@ -36,9 +38,11 @@ def _goDown(self, mode, callback=None, params = None):
             else:
                 callback(self.id, params)
 
-    print('retorno ya')
+
 def RTL (self, blocking=True, callback=None, params = None):
     if self.state == 'flying':
+        if self.verbose:
+            logging.info("Inicio retorno")
         self.state = 'returning'
         if blocking:
             self._goDown('RTL')
@@ -52,11 +56,11 @@ def RTL (self, blocking=True, callback=None, params = None):
 def Land (self, blocking=True, callback=None, params = None):
     if self.state == 'flying' or self.state == 'returning':
         self.state = 'landing'
+        if self.verbose:
+            logging.info("Inicio aterrizaje")
         if blocking:
             self._goDown('LAND')
-            print('retorno ya 2')
         else:
-            print ('aterrizo el dron ', self.id)
             goingDownThread = threading.Thread(target=self._goDown, args=['LAND', callback, params])
             goingDownThread.start()
         return True

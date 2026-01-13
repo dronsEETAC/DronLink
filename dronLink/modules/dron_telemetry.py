@@ -1,4 +1,4 @@
-
+import logging
 import math
 import threading
 import time
@@ -7,6 +7,10 @@ import time
 def _send_telemetry_info(self, process_telemetry_info):
     self.alt = 0
     self.sendTelemetryInfo = True
+
+    if self.verbose:
+        logging.info("Inicio envio de telemetría global")
+
     while self.sendTelemetryInfo:
 
         # preparo el paquete de datos de telemetria
@@ -35,3 +39,5 @@ def send_telemetry_info(self, process_telemetry_info):
 
 def stop_sending_telemetry_info(self):
     self.sendTelemetryInfo = False
+    if self.verbose:
+        logging.info("Detengo envio de telemetría global")

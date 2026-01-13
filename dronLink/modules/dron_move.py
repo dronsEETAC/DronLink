@@ -1,4 +1,4 @@
-
+import logging
 import math
 import threading
 import time
@@ -94,6 +94,8 @@ def _move_distance (self, direction, distance, callback=None, params = None):
         self.cmd = self._prepare_command_mov(0, -step, 0)
     if direction == "East":
         self.cmd = self._prepare_command_mov(0, step, 0)
+    if self.verbose:
+        logging.info("Muevo en la dirección: %s", str(direction))
 
     self.vehicle.mav.send(self.cmd)
     time.sleep (5)
@@ -103,17 +105,8 @@ def _move_distance (self, direction, distance, callback=None, params = None):
         'GLOBAL_POSITION_INT',
         condition=self._checkSpeedZero,
     )
-    '''  while True:
-        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
-        if msg:
-            msg = msg.to_dict()
-            vx =  float(msg['vx'])
-            vy = float(msg['vy'])
-            vz = float(msg['vz'])
-            speed = math.sqrt( vx*vx+vy*vy+vz*vz)/100
-            if speed < 0.1:
-                break
-            time.sleep(0.25)'''
+    if self.verbose:
+        logging.info("Destino alcanzado")
 
     # meter aqui un bucle esperando hasta que haya llegado
     if callback != None:
@@ -127,53 +120,6 @@ def _move_distance (self, direction, distance, callback=None, params = None):
                 callback(self.id)
             else:
                 callback(self.id, params)
-
-
-def _move_distance_2 (self, step_x, step_y):
-    self._stopGo()
-
-
-    cmd = mavutil.mavlink.MAVLink_set_position_target_local_ned_message(
-        10,  # time_boot_ms (not used)
-        self.vehicle.target_system,
-        self.vehicle.target_component,
-        mavutil.mavlink.MAV_FRAME_LOCAL_OFFSET_NED,  # frame
-        0b0000101111111000,  # type_mask (only speeds enabled)
-        step_x,
-        step_y,
-        0,  # x, y, z positions (not used)
-        0,
-        0,
-        0,  # x, y, z velocity in m/s
-        0,
-        0,
-        0,  # x, y, z acceleration (not supported yet, ignored in GCS_Mavlink)
-        0,
-        0,
-    )  # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
-
-
-    self.vehicle.mav.send(cmd)
-    time.sleep (5)
-    # espero en este bucle hasta que se ha alcanzado el destino
-    # lo sabre porque la velocidad es cero
-    msg = self.message_handler.wait_for_message(
-        'GLOBAL_POSITION_INT',
-        condition=self._checkSpeedZero,
-    )
-    '''  while True:
-        msg = self.message_handler.wait_for_message('GLOBAL_POSITION_INT', timeout=3)
-        if msg:
-            msg = msg.to_dict()
-            vx =  float(msg['vx'])
-            vy = float(msg['vy'])
-            vz = float(msg['vz'])
-            speed = math.sqrt( vx*vx+vy*vy+vz*vz)/100
-            if speed < 0.1:
-                break
-            time.sleep(0.25)'''
-
-
 
 
 
@@ -199,4 +145,6 @@ def setMoveSpeed (self, speed):
         speed,  # Velocidad máxima (-1 para no limitar)
         0, 0, 0,0, 0)  # Parámetros adicionales (no utilizados)
     self.vehicle.mav.send(msg)
+    if self.verbose:
+        logging.info("Nueva velocidad de movimiento %s", str(speed))
 

@@ -1,7 +1,9 @@
+import logging
+
 
 class Dron(object):
-    def __init__(self, id = None):
-        print ("DronLink con Handlers")
+    def __init__(self, id = None, verbose = False):
+        logging.basicConfig(level=logging.INFO)
         self.id = id
 
         self.state = "disconnected"
@@ -14,6 +16,7 @@ class Dron(object):
                   returning
                   landing
               '''
+        self.verbose = verbose
         self.lat = 0
         self.lon = 0
         self.alt = 0
@@ -46,6 +49,8 @@ class Dron(object):
         # leer parámetros
 
         self.distance = None
+        self.orientation = None
+
 
 
     # aqui se importan los métodos de la clase Dron, que están organizados en ficheros.
@@ -70,7 +75,7 @@ class Dron(object):
     from dronLink.modules.dron_mission import executeMission, _executeMission, uploadMission, _uploadMission, _getMission, getMission, executeFlightPlan, _executeFlightPlan
     from dronLink.modules.dron_altitude import change_altitude, _change_altitude
     from dronLink.modules.dron_drop import drop
-    from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed, _checkSpeedZero, _move_distance_2
+    from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed, _checkSpeedZero
     from dronLink.modules.dron_bottomGeofence  import startBottomGeofence, stopBottomGeofence,  _minAltChecking
     from dronLink.modules.dron_RC_override import send_rc
     from dronLink.modules.message_handler import MessageHandler

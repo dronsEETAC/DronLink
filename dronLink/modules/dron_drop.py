@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 
@@ -20,3 +21,5 @@ def drop(self):
             0, 0, 0, 0, 0)
 
     time.sleep(2)
+    if self.verbose:
+        logging.info("Drop realizado")

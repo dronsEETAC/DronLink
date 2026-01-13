@@ -1,4 +1,5 @@
 import json
+import logging
 import math
 import threading
 import time
@@ -8,7 +9,7 @@ from pymavlink import mavutil
 
 
 
-def _getMission2 (self, callback=None, params = None):
+'''def _getMission2 (self, callback=None, params = None):
     mission = None
     # Solicitar la misión (waypoints) al autopiloto
     self.vehicle.mav.mission_request_list_send( self.vehicle.target_system,  self.vehicle.target_component)
@@ -53,27 +54,34 @@ def _getMission2 (self, callback=None, params = None):
     else:
         return mission
 
-
+'''
 
 
 def _getMission (self, callback=None, params = None):
     mission = None
+    if self.verbose:
+        logging.info("Inicio recogida de datos de la misión")
     # Solicitar la misión (waypoints) al autopiloto
     self.vehicle.mav.mission_request_list_send( self.vehicle.target_system,  self.vehicle.target_component)
     # espero el numero de waypoints
     msg = self.message_handler.wait_for_message('MISSION_COUNT')
     count = msg.count
-    print ('count: ', count)
+
     if count < 2:
         # no hay misión
-            return None
-
+        if self.verbose:
+            logging.info("No hay misión")
+        return None
+    if self.verbose:
+        logging.info("El numero de datos de la misión es %s ", str(count))
     mission_items = []
     # Solicitar cada waypoint
     for i in range(count):
         self.vehicle.mav.mission_request_int_send( self.vehicle.target_system,  self.vehicle.target_component, i)
         msg = self.message_handler.wait_for_message('MISSION_ITEM_INT')
         mission_items.append (msg)
+        if self.verbose:
+            logging.info("Ya tengo el dato %s", str(i))
     mission = {
         'takeOffAlt': None,
         'waypoints': []
@@ -91,7 +99,8 @@ def _getMission (self, callback=None, params = None):
             else:
                 mission['waypoints'].append({'rotRel': msg.param1, 'dir': msg.param3})
 
-
+    if self.verbose:
+        logging.info("Preparada la estructura de datos con la misión")
     if callback != None:
         if self.id == None:
             callback(mission)
@@ -129,11 +138,14 @@ def _executeFlightPlan (self, flightPlan, inWaypoint= None, callback=None, param
         se ejecutará esa función pasándole como parámetros el indice del waypoint en la lista y el
         propio waypoint.
         '''
-
+    if self.verbose:
+        logging.info("Inicio la ejecución del plan de vuelo ")
     if 'speed' in list(flightPlan.keys()):
         speed = flightPlan['speed'] * 100  # la velocidad viene en m y hay que indicarla en cm
         speedParameter = [{'ID': "WPNAV_SPEED", 'Value': speed}]
         self.setParams(speedParameter)
+        if self.verbose:
+            logging.info("Asigno la velocidad: %s",str(speed))
 
     takeOffAlt = flightPlan['takeOffAlt']
 
@@ -144,11 +156,16 @@ def _executeFlightPlan (self, flightPlan, inWaypoint= None, callback=None, param
     waypoints = flightPlan['waypoints']
     for index,wp in enumerate(waypoints):
         if 'lat' in list(wp.keys()):
+            if self.verbose:
+                logging.info("Vuelo al siguiente waypoint")
             self.goto (float (wp['lat']), float(wp['lon']), float (wp['alt']))
+
             if inWaypoint:
                 inWaypoint (index,wp)
         if 'rotAbs' in list(wp.keys()):
             absoluteDegrees = wp['rotAbs']
+            if self.verbose:
+                logging.info("Nueva orientación: %s ", str(absoluteDegrees))
             self.vehicle.mav.command_long_send(
                 self.vehicle.target_system,
                 self.vehicle.target_component,
@@ -164,6 +181,8 @@ def _executeFlightPlan (self, flightPlan, inWaypoint= None, callback=None, param
         if 'rotRel' in list(wp.keys()):
             angle = wp['rotRel']
             dir = wp['dir']
+            if self.verbose:
+                logging.info("Giro %s grados", str(angle))
             self.vehicle.mav.command_long_send(
                 self.vehicle.target_system,
                 self.vehicle.target_component,
@@ -220,7 +239,8 @@ def _uploadMission (self, mission, callback=None, params = None):
         con un RTL
         '''
 
-
+    if self.verbose:
+        logging.info("Inicio la carga de la misión")
 
     takOffAlt = mission['takeOffAlt']
 
@@ -239,15 +259,13 @@ def _uploadMission (self, mission, callback=None, params = None):
         self.vehicle.target_component,
         mavutil.mavlink.MAV_CMD_GET_HOME_POSITION,
         0, 0, 0, 0, 0, 0, 0, 0)
-    print ('voy a pedir el home')
+
     msg = self.message_handler.wait_for_message('HOME_POSITION')
     #msg = self.vehicle.recv_match(type='HOME_POSITION', blocking=True)
     msg = msg.to_dict()
     lat = msg['latitude']
     lon = msg['longitude']
     alt = msg['altitude']
-
-    print ('ya tengo el home')
 
     # añadimos este primer waypoint a la mision
     wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
@@ -283,7 +301,6 @@ def _uploadMission (self, mission, callback=None, params = None):
             seq += 1  # Increase waypoint sequence for the next waypoint
         if 'rotAbs' in list(wp.keys()):
             heading = wp['rotAbs']
-            print ('heading ', heading)
             wploader.append(mavutil.mavlink.MAVLink_mission_item_int_message(
                 self.vehicle.target_system, self.vehicle.target_component, seq,
                 mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
@@ -354,20 +371,23 @@ def _uploadMission (self, mission, callback=None, params = None):
     self.vehicle.waypoint_count_send(len(wploader))
 
     # Enviamos los items
-    print ('vamos a enviar los items')
+    if self.verbose:
+        logging.info("Inicio la caraga de %s datos", str(len(wploader)))
 
     for i in range(len(wploader)):
         msg = self.message_handler.wait_for_message('MISSION_REQUEST')
         #msg = self.vehicle.recv_match(type=['MISSION_REQUEST_INT', 'MISSION_REQUEST'], blocking=True, timeout = 3)
-        print(f'Sending waypoint {msg.seq}/{len(wploader) - 1}')
         self.vehicle.mav.send(wploader[msg.seq])
+        if self.verbose:
+            logging.info("Cargado el dato %s ", str(i))
 
         if msg.seq == len(wploader) - 1:
             break
 
 
     msg = self.message_handler.wait_for_message('MISSION_ACK', timeout=3)
-
+    if self.verbose:
+            logging.info("Mision cargada")
     if callback != None:
         if self.id == None:
             if params == None:
@@ -399,6 +419,8 @@ def _executeMission (self, callback=None, params = None):
     self.vehicle.mav.command_long_send(self.vehicle.target_system, self.vehicle.target_component,
                                          mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 0, 1, 0, 0, 0, 0, 0, 0)
     self.vehicle.motors_armed_wait()
+    if self.verbose:
+        logging.info("Inicio la ejecución de la misión")
 
     self.vehicle.mav.command_long_send(
         self.vehicle.target_system,
@@ -414,14 +436,8 @@ def _executeMission (self, callback=None, params = None):
         'GLOBAL_POSITION_INT',
         condition=self._checkOnHearth,
     )
-    '''   self.vehicle.mav.command_long_send(
-        self.vehicle.target_system,
-        self.vehicle.target_component,
-        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
-        0,  # confirmation
-        0,  # param1 = 0 → DESARMAR
-        0, 0, 0, 0, 0, 0
-    )'''
+    if self.verbose:
+            logging.info("Misión completada")
     self.state = 'connected'
     if callback != None:
         if self.id == None:

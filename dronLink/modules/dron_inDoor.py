@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 import math
@@ -49,11 +50,13 @@ def EstablecerLimites (self,limites , callback = None):
         self.obstaculos = None
 
     self.callback  = callback
-    print ('limites: ', self.inclusion)
-    print ('obstaculos: ', self.obstaculos)
+    if self.verbose:
+        logging.info("Escenario InDoor establecido")
 
 
 def _ActivaLimitesIndoor(self, callback = None):
+    if self.verbose:
+        logging.info("Activo control de límites InDoor")
     # Esta función se ejecuta en un thread y está pendiente de que el dron no se salte los límites
     SAFE_MODES = ['GUIDED', 'LOITER', 'ALT_HOLD', 'POSHOLD']
     # tomo nota de la velocidad de loites
@@ -69,6 +72,8 @@ def _ActivaLimitesIndoor(self, callback = None):
                 # la comprobación la hago si no estoy en land o RTL
                 if self.alt < self.minAltLocal and self.flightMode in SAFE_MODES:
                     if callback:
+                        if self.verbose:
+                            logging.info("Superada la altura minima")
                         callback(self.id,-2, 1)  # Aviso de que he superado la altura mínima
                     # guardo el modo que tengo en este momento
                     mode = self.flightMode
@@ -79,17 +84,23 @@ def _ActivaLimitesIndoor(self, callback = None):
                     # restauto el modo que tenía
                     self.setFlightMode(mode)
                     if callback:
+                        if self.verbose:
+                            logging.info("Vuelve a estar dentro de los límites")
                         callback(self.id, -2, 0)  # Aviso de que se ha recuperado la posición
         # veamos si he superado el limite superior
         if self.maxAltLocal:
             if self.alt is not None and self.flightMode is not None:
                 if self.alt > self.maxAltLocal and self.flightMode in SAFE_MODES:
+                    if self.verbose:
+                        logging.info("Superada la altura máxima")
                     if callback:
                         callback(self.id, -1, 1)  # Aviso de que se ha detectado altura maxima
                     mode = self.flightMode
                     self.setFlightMode('GUIDED')
                     self.move_distance('Down', 1)
                     self.setFlightMode(mode)
+                    if self.verbose:
+                        logging.info("Vuelve a estar dentro de los límites")
                     if callback:
                         callback(self.id, -1, 0)  # Aviso de que ya se ha recuperado la posición
 
@@ -103,7 +114,8 @@ def _ActivaLimitesIndoor(self, callback = None):
             # que el dron puede recorrer en 1 segundo a la velocidad que lleva en ese momento
             # pero con un mínimo de 2 metros
             if d < max (self.groundSpeed, 2) and not peligro:
-                print ('peligro')
+                if self.verbose:
+                    logging.info("En zona de peligro")
                 if callback:
                     callback(self.id, 0, 1)  # Aviso de que entro en zona de peligro
 
@@ -125,9 +137,13 @@ def _ActivaLimitesIndoor(self, callback = None):
                     newParameters = [{'ID': "LOIT_SPEED", 'Value':loiterSpeed}]
                     self.setParams(newParameters)
                     peligro = False
+                    if self.verbose:
+                        logging.info("Fuera de peligro")
                     callback(self.id, 0, 0)  # Aviso de que entro en zona segura'
                 elif d < 0.2:
                     # estoy ya encima del límite
+                    if self.verbose:
+                        logging.info("Violación del límite. Retorno a casa")
                     if callback:
                         callback(self.id, 0, 2)  # Aviso de que me he salido del fence
                     # ordeno RTL
@@ -148,6 +164,8 @@ def _ActivaLimitesIndoor(self, callback = None):
                 d = self._distancia_minima_punto_a_poligono(poligono, punto)
 
                 if d < max(self.groundSpeed, 2) and not peligroObstaculo[i]:
+                    if self.verbose:
+                        logging.info("Cerca del obstáculo %s", str(i))
                     if callback:
                         callback(self.id, i + 1, 1)  # Aviso de que entro en peligro
 
@@ -159,6 +177,8 @@ def _ActivaLimitesIndoor(self, callback = None):
 
                 elif peligroObstaculo[i]:
                     if d > distanciaFuera:
+                        if self.verbose:
+                            logging.info("Vuelve a estar lejos del obstáculo %s", str(i))
                         if callback:
                             callback(self.id, i + 1, 2)  # Aviso de que me he alejado lo suficiente del obstáculo
                         newParameters = [{'ID': "LOIT_SPEED", 'Value': loiterSpeed}]
@@ -167,6 +187,8 @@ def _ActivaLimitesIndoor(self, callback = None):
                         callback(self.id, i+1, 0)  # Aviso de que entro en zona segura
                     elif d < 0.2:
                         # estoy encima del obstáculo. Ordeno RTL
+                        if self.verbose:
+                            logging.info("Encima del obstáculo %s. Regreso a casa", str(i))
                         self.setFlightMode("RTL")
                         # restauro la velocidad que tenía cuando entré en zona de peligro
                         newParameters = [{'ID': "LOIT_SPEED", 'Value': loiterSpeed}]
@@ -182,6 +204,8 @@ def ActivaLimitesIndoor (self):
 
 def DesactivaLimitesIndoor (self):
     self.checkingInDoorLimits = False
+    if self.verbose:
+        logging.info("Desactivo control de límites InDoor")
 
 # Las dos funciones siguientes se necesitan para calcular la distancia de un punto a un polígono
 
@@ -249,6 +273,8 @@ def ConfiguraVueloIndoor (self, posz=2):
         {'ID': "ARMING_CHECK", 'Value': 1048054} # para que no espere señal gps para armar
     ]
     self.setParams(newParameters)
+    if self.verbose:
+        logging.info("Dron configurado para vuelo InDoor")
 
 def ConfiguraVueloExterior (self, posz=2):
     # posz indica si se usa altimetro laser (2) o si se usa barometro (1)
@@ -263,6 +289,9 @@ def ConfiguraVueloExterior (self, posz=2):
         {'ID': "ARMING_CHECK", 'Value': 1},
     ]
     self.setParams(newParameters)
+    if self.verbose:
+        logging.info("Dron configurado para vuelo en exterior")
+
 
 def SetHome (self):
     # Establecer home en la posición actual
@@ -274,3 +303,5 @@ def SetHome (self):
         1,  # use_current = 1 → usar posición actual
         0, 0, 0, 0, 0, 0  # los demás parámetros no se usan en este modo
     )
+    if self.verbose:
+        logging.info("Home establecido en el sitio en el que está el dron ahora")

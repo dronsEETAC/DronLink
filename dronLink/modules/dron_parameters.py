@@ -1,4 +1,5 @@
 import json
+import logging
 import threading
 import pymavlink.dialects.v20.all as dialect
 
@@ -42,6 +43,8 @@ def _getParams(self,parameters,  callback=None):
                     })
                     ready = True
                     i= i+1
+                if self.verbose:
+                    logging.info("Recibo parámetro %s", str(PARAM))
 
 
     if callback != None:
@@ -66,7 +69,6 @@ def _getParams2(self,parameters,  callback=None):
         # pido el valor del siguiente parámetro de la lista
         ready = False
         while not ready:
-            print ('PIDO ', PARAM)
             self.vehicle.mav.param_request_read_send(
                 self.vehicle.target_system, self.vehicle.target_component,
                 PARAM.encode(encoding="utf-8"),
@@ -79,14 +81,12 @@ def _getParams2(self,parameters,  callback=None):
                 params=PARAM,
                 timeout = 5
             )
-            print ('***** ', message)
             if message:
                 message = message.to_dict()
                 result.append({
                     message['param_id']: message["param_value"]
                 })
                 ready = True
-                print ('ya tengo otro')
 
     if callback != None:
         if self.id == None:
@@ -113,6 +113,8 @@ def _setParams(self,parameters,  callback=None, params = None):
         message = dialect.MAVLink_param_set_message(target_system=self.vehicle.target_system,
                                                         target_component=self.vehicle.target_component, param_id=PARAM['ID'].encode("utf-8"),
                                                         param_value=PARAM['Value'], param_type=dialect.MAV_PARAM_TYPE_REAL32)
+        if self.verbose:
+            logging.info("Envío parámetro %s", str(PARAM['ID']))
         self.vehicle.mav.send(message)
 
     if callback != None:

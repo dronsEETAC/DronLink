@@ -6,10 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="ad13557a-bc40-4667-a076-b3f5c03cd602" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/Dron.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/Dron.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/docs/~$onLinkDocTopics.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_RTL_Land.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_RTL_Land.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_altitude.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_altitude.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_arm.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_arm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_connect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_drop.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_drop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_geofence.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_geofence.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_goto.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_goto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_heading.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_heading.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_inDoor.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_inDoor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_local_telemetry.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_local_telemetry.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_mission.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_mission.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_move.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_move.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_nav.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_nav.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_parameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_parameters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_takeOff.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_takeOff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_telemetry.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_telemetry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/modules/message_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/message_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/tests/test_libreria.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/tests/test_libreria.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/tests/test_mission.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/tests/test_mission.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,57 +51,59 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.DashboardVueloInteriores.executor": "Run",
-    "Python.arduino.executor": "Run",
-    "Python.dron_RTL_Land.executor": "Run",
-    "Python.dron_heading.executor": "Run",
-    "Python.dron_minAltitude.executor": "Run",
-    "Python.dron_move.executor": "Run",
-    "Python.joystickTelclado.executor": "Run",
-    "Python.pid.executor": "Run",
-    "Python.prueba.executor": "Run",
-    "Python.pruebaBateria.executor": "Run",
-    "Python.pruebaDetectarBrench.executor": "Run",
-    "Python.pruebaImagen.executor": "Run",
-    "Python.pruebaMapa.executor": "Run",
-    "Python.receiverWebRTC.executor": "Run",
-    "Python.senderWebRTC.executor": "Run",
-    "Python.te4st_gotoLocal.executor": "Run",
-    "Python.testJoystickReal.executor": "Run",
-    "Python.test_RC_override.executor": "Run",
-    "Python.test_distance.executor": "Run",
-    "Python.test_gotoGlobal.executor": "Run",
-    "Python.test_heading.executor": "Run",
-    "Python.test_inDoor.executor": "Run",
-    "Python.test_libreria.executor": "Run",
-    "Python.test_minAltCheck.executor": "Run",
-    "Python.test_mission.executor": "Run",
-    "Python.test_mov.executor": "Run",
-    "Python.test_nav.executor": "Run",
-    "Python.test_rotate.executor": "Run",
-    "Python.test_scenario.executor": "Run",
-    "Python.test_sensor.executor": "Run",
-    "Python.test_telemetry_info.executor": "Run",
-    "Python.videoSreamWebRTC.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Miguel/Documents/Miguel/DEE/DronLink",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.DashboardVueloInteriores.executor&quot;: &quot;Run&quot;,
+    &quot;Python.arduino.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dron_RTL_Land.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dron_connect.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dron_heading.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dron_minAltitude.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dron_move.executor&quot;: &quot;Run&quot;,
+    &quot;Python.joystickTelclado.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pid.executor&quot;: &quot;Run&quot;,
+    &quot;Python.prueba.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pruebaBateria.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pruebaDetectarBrench.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pruebaImagen.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pruebaMapa.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pruebaYaw.executor&quot;: &quot;Run&quot;,
+    &quot;Python.receiverWebRTC.executor&quot;: &quot;Run&quot;,
+    &quot;Python.senderWebRTC.executor&quot;: &quot;Run&quot;,
+    &quot;Python.te4st_gotoLocal.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testJoystickReal.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_RC_override.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_distance.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_gotoGlobal.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_heading.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_inDoor.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_libreria.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_minAltCheck.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_mission.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_mov.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_nav.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_rotate.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_scenario.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_sensor.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_telemetry_info.executor&quot;: &quot;Run&quot;,
+    &quot;Python.videoSreamWebRTC.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Miguel/Documents/Miguel/DEE/DronLink&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Miguel\Documents\Miguel\DEE\DronLink\dronLink\tests" />
       <recent name="C:\Users\Miguel\Documents\Miguel\DEE\DronLink\dronLink\modules" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_mission">
-    <configuration name="DashboardVueloInteriores" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.pruebaYaw">
+    <configuration name="dron_connect" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DronLink" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -94,11 +112,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/demostradores" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dronLink/modules" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/demostradores/DashboardVueloInteriores.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dronLink/modules/dron_connect.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -107,7 +125,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pruebaBateria" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="pruebaYaw" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DronLink" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -120,7 +138,29 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dronLink/tests/pruebaBateria.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dronLink/tests/pruebaYaw.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_libreria" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DronLink" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dronLink/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dronLink/tests/test_libreria.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -151,7 +191,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="test_scenario" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="test_telemetry_info" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DronLink" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -159,25 +199,6 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dronLink/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dronLink/tests/test_scenario.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="test_telemetry_info" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="DronLink" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dronLink/tests" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -194,11 +215,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.pruebaYaw" />
         <item itemvalue="Python.test_mission" />
+        <item itemvalue="Python.test_libreria" />
+        <item itemvalue="Python.dron_connect" />
         <item itemvalue="Python.test_telemetry_info" />
-        <item itemvalue="Python.pruebaBateria" />
-        <item itemvalue="Python.DashboardVueloInteriores" />
-        <item itemvalue="Python.test_scenario" />
       </list>
     </recent_temporary>
   </component>

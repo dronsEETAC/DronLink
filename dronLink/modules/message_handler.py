@@ -155,6 +155,7 @@ class MessageHandler:
                 self.handlers[msg_type].remove(callback)
                 if not self.handlers[msg_type]:
                     del self.handlers[msg_type]
+                    
     def wait_for_message(self, msg_type, condition=None, params= None, timeout = None, wait = True):
         # Le indico al handler el mensaje que necesito (tipo y condicion)
         # Puedo indicarle que no espere

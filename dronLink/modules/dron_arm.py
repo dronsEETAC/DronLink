@@ -1,3 +1,4 @@
+import logging
 import threading
 from pymavlink import mavutil
 
@@ -9,7 +10,8 @@ def setFlightMode (self,mode):
         mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
         mode_id)
     msg = self.message_handler.wait_for_message('COMMAND_ACK', timeout=3)
-
+    if self.verbose:
+        logging.info("Pongo el dron en modo %s", str(mode))
 
 def _arm(self, callback=None, params = None):
     self.state = "arming"
@@ -19,6 +21,10 @@ def _arm(self, callback=None, params = None):
 
     msg = self.message_handler.wait_for_message('COMMAND_ACK', timeout=3)
     self.vehicle.motors_armed_wait()
+
+    if self.verbose:
+        logging.info("Dron armado")
+
     self.state = "armed"
     if callback != None:
         if self.id == None:
@@ -34,7 +40,6 @@ def _arm(self, callback=None, params = None):
 
 
 def arm(self, blocking=True, callback=None, params = None):
-    print ("Estado: ", self.state)
     if self.state == 'connected':
         if blocking:
             self._arm()

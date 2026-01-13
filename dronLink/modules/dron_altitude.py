@@ -1,3 +1,4 @@
+import logging
 import time
 from pymavlink import mavutil
 import threading
@@ -15,6 +16,8 @@ def _change_altitude(self, altitude, callback=None, params = None):
                                                                        0, 0,
                                                                        0))
     # espero hasta que el dron haya alcanzado la altura indicada
+    if self.verbose:
+        logging.info("Inicio cambio de altitud hasta %s", str(altitude))
 
     msg = self.message_handler.wait_for_message(
         'GLOBAL_POSITION_INT',
@@ -22,7 +25,8 @@ def _change_altitude(self, altitude, callback=None, params = None):
         params=altitude
     )
 
-
+    if self.verbose:
+        logging.info("Nueva altitud alcanzada")
     if callback != None:
         if self.id == None:
             if params == None:

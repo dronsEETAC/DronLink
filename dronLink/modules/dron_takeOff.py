@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 from pymavlink import mavutil
@@ -9,7 +10,8 @@ def _checkAltitudeReached (self, msg, aTargetAltitude):
         return False
 
 def _takeOff(self, aTargetAltitude,callback=None, params = None):
-    print ('empezamos a despegar')
+    if self.verbose:
+        logging.info("Inicio el despegue")
     self.state = "takingOff"
     self.vehicle.mav.command_long_send(self.vehicle.target_system, self.vehicle.target_component,
                                          mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 0, 0, 0, 0, 0, 0, aTargetAltitude)
@@ -17,12 +19,13 @@ def _takeOff(self, aTargetAltitude,callback=None, params = None):
 
     # Espero un mensaje que cumpla la condición que se evalua en _check, a la que le paso
     # como parametro la altura a alcanzar. El check solo mira que la altura actual sea la deseada
-    print ('vamos a despegar')
     msg = self.message_handler.wait_for_message(
         'GLOBAL_POSITION_INT',
         condition = self._checkAltitudeReached,
         params = aTargetAltitude
     )
+    if self.verbose:
+        logging.info("Dron en el aire")
 
     self.state = "flying"
     if callback != None:
@@ -40,7 +43,6 @@ def _takeOff(self, aTargetAltitude,callback=None, params = None):
 
 
 def takeOff(self, aTargetAltitude, blocking=True, callback=None, params = None):
-    print ('vamos a despegar')
     if self.state == 'armed':
         if blocking:
             self._takeOff(aTargetAltitude)

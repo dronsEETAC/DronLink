@@ -4,6 +4,7 @@ import time
 
 from dronLink.modules.message_handler import MessageHandler
 from pymavlink import mavutil
+import logging
 
 ''' Esta función sirve exclusivamente para detectar cuándo el dron se desarma porque 
 ha pasado mucho tiempo desde que se armó sin despegar'''
@@ -12,7 +13,10 @@ ha pasado mucho tiempo desde que se armó sin despegar'''
 def _handle_heartbeat(self, msg):
     if msg.base_mode == 89 and self.state == 'armed':
         self.state = 'connected'
-        print ('Ne acabo de desarmar')
+
+        if self.verbose:
+            logging.info("El dron se acaba de desarmar")
+
     '''if msg.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED and self.state == 'connected':
         print ("Vuelo a armar")
         self.state = 'armed'
@@ -93,6 +97,8 @@ def _connect(self, connection_string, baud, callback=None, params=None):
         0
     )
 
+    if self.verbose:
+        logging.info("Conectado al dron")
 
     if callback != None:
         if self.id == None:
@@ -135,6 +141,10 @@ def disconnect(self):
         self.stop_sending_local_telemetry_info()
         time.sleep(1)
         self.vehicle.close()
+
+        if self.verbose:
+            logging.info("Desconectado")
+
         return True
     else:
         return False
@@ -153,3 +163,6 @@ def reboot (self):
         0,  # Parám 6: no utilizado
         0   # Parám 7: no utilizado
     )
+
+    if self.verbose:
+        logging.info("Reinicio el dron")

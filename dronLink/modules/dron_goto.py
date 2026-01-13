@@ -1,3 +1,4 @@
+import logging
 import math
 import threading
 import time
@@ -60,13 +61,15 @@ def _goto (self, lat, lon, alt, callback=None, params = None):
                                                                        int(0b110111111000), int(lat * 10 ** 7),
                                                                        int(lon * 10 ** 7), alt, 0, 0, 0, 0, 0, 0, 0,
                                                                        0))
-
+    if self.verbose:
+        logging.info("Inicio go to global")
     msg = self.message_handler.wait_for_message(
         'GLOBAL_POSITION_INT',
         condition=self._checkGlobalArrived,
         params=(lat, lon, alt)
     )
-
+    if self.verbose:
+        logging.info("Destino alcanzado")
 
     if callback != None:
         if self.id == None:
@@ -107,13 +110,15 @@ def _gotoLocal (self, x, y, z,  callback=None, params = None):
         int(0b0000111111111000),
         float(x),float(y), float(-z),
         0, 0, 0, 0, 0, 0, 0,0)
-
+    if self.verbose:
+        logging.info("Inicio go to local")
     msg = self.message_handler.wait_for_message(
         'LOCAL_POSITION_NED',
         condition=self._checkLocalArrived,
         params=(x,y,z)
     )
-
+    if self.verbose:
+        logging.info("Destino alcanzado")
     if callback != None:
         if self.id == None:
             if params == None:

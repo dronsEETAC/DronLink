@@ -6,27 +6,34 @@
   <component name="ChangeListManager">
     <list default="true" id="ad13557a-bc40-4667-a076-b3f5c03cd602" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/Dron.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/Dron.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/docs/~$onLinkDocTopics.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_RTL_Land.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_RTL_Land.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_altitude.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_altitude.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLink/docs/~WRL0615.tmp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_arm.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_arm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_connect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_drop.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_drop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_geofence.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_geofence.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_goto.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_goto.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_heading.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_heading.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_inDoor.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_inDoor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_local_telemetry.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_local_telemetry.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_mission.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_mission.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_move.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_move.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_nav.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_nav.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_parameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_parameters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_takeOff.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_takeOff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/dron_telemetry.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/dron_telemetry.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/modules/message_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/modules/message_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/tests/test_libreria.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/tests/test_libreria.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dronLink/tests/test_mission.py" beforeDir="false" afterPath="$PROJECT_DIR$/dronLink/tests/test_mission.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/docs/tabla_dronLink.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/docs/tabla_dronLink.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_RTL_Land.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_altitude.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_arm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_bottomGeofence.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_connect.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_drop.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_geofence.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_goto.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_local_telemetry.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_mission.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_move.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_nav.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_parameters.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_takeOff.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/modules/dron_telemetry.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_bottomGeofence.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_drop.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_libreria.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_mission.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_mov.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_readParameters.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_scenario.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dronLinkSinHandlers/tests/test_telemetry_info.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

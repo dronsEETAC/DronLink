@@ -53,7 +53,7 @@ def RTL (self, blocking=True, callback=None, params = None):
     else:
         return False
 
-def Land (self, blocking=True, callback=None, params = None):
+def land (self, blocking=True, callback=None, params = None):
     if self.state == 'flying' or self.state == 'returning':
         self.state = 'landing'
         if self.verbose:

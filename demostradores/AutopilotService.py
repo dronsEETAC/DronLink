@@ -49,7 +49,7 @@ def on_message(cli, userdata, message):
     if command == 'Land':
         if dron.state == 'flying':
             # operación no bloqueante. Cuando acabe publicará el evento correspondiente
-            dron.Land(blocking=False, callback=publish_event, params='landed')
+            dron.land(blocking=False, callback=publish_event, params='landed')
 
     if command == 'RTL':
         if dron.state == 'flying':

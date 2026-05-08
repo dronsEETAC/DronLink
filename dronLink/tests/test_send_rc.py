@@ -34,5 +34,5 @@ print ("Voy adelante (depende de como esté configurado el pitch")
 for i in range (100):
     dron.send_rc(1500, 2000, 1500, 1500)
     time.sleep(0.1)
-dron.Land()
+dron.land()
 print ("En tierra")

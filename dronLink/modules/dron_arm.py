@@ -43,10 +43,14 @@ def _arm2(self, callback=None, params = None):
 
 def _arm(self, callback=None, params = None):
     self.state = "arming"
+
     self.setFlightMode ('GUIDED')
+
+
     self.vehicle.mav.command_long_send(self.vehicle.target_system, self.vehicle.target_component,
                                          mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 0, 1, 0, 0, 0, 0, 0, 0)
     msg = self.message_handler.wait_for_message('COMMAND_ACK', timeout=3)
+
     timeout = 10
     start_time = time.time()
     armed = False

@@ -3,9 +3,10 @@ import time
 from dronLink.Dron import Dron
 dron = Dron()
 connection_string = 'tcp:127.0.0.1:5763'
+connection_string = f'udpout:127.0.0.1:14552'
 baud = 115200
-#connection_string = 'com3'
-#baud = 57600
+'''connection_string = 'com3'
+baud = 57600'''
 dron.connect(connection_string, baud)
 print ('conectado')
 def procesarTelemetria (telemetryInfo ):

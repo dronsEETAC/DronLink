@@ -15,6 +15,8 @@ def connect ():
     global dron, speedSldr
     connection_string ='tcp:127.0.0.1:5763'
     baud = 115200
+    '''connection_string = 'udp:127.0.0.1:14552'
+    baud = 115200'''
     dron.connect(connection_string,baud)
     # cambiamos el color del boton
     connectBtn['text'] = 'Conectado'
@@ -62,7 +64,7 @@ def onEarth (op):
 def land ():
     global dron
     # llamada no bloqueante. El parámetro nos permitirá saber en onEarth que venimos de Land
-    dron.Land(blocking = False,  callback = onEarth, params = 'land')
+    dron.land(blocking = False,  callback = onEarth, params = 'land')
     landBtn['text'] = 'Aterrizando...'
     landBtn['fg'] = 'black'
     landBtn['bg'] = 'yellow'

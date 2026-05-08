@@ -4,6 +4,7 @@ from dronLink.Dron import Dron
 
 dron = Dron ()
 connection_string = 'tcp:127.0.0.1:5763'
+connection_string = f'udpout:127.0.0.1:14552'
 baud = 115200
 '''connection_string = 'com13'
 baud = 4800'''
@@ -35,6 +36,6 @@ dron.rotate (90)
 print ('rotamos 45 grados en sentido anti horario')
 dron.rotate (45, 'ccw')
 print ('vamos a aterrizar')
-dron.Land()
+dron.land()
 print ('ya estoy en tierra')
 dron.disconnect()

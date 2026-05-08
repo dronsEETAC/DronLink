@@ -15,6 +15,6 @@ print ('ya he bajado a los 10 metros')
 dron.change_altitude(20)
 print ('ya he subido a los 20 metros')
 
-dron.Land()
+dron.land()
 print ('ya estoy en tierra')
 dron.disconnect()

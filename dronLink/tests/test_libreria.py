@@ -2,11 +2,18 @@ import time
 
 from dronLink.Dron import Dron
 
-dron = Dron (verbose= True)
-connection_string = 'tcp:127.0.0.1:5762'
+dron = Dron ()
+connection_string = 'udpout:localhost:12000'
+connection_string = f'udpout:127.0.0.1:14552'
+connection_string = f'udp:127.0.0.1:14551'
+#connection_string = 'tcp:127.0.0.1:5763'
+connection_string = f'udp:192.168.1.71:14550'
+connection_string = "udpout:10.254.58.56:14550"
+#connection_string = 'tcp:10.254.58.77:5763'
 baud = 115200
 '''connection_string = 'com13'
 baud = 4800'''
+print ("Voy a conectarme")
 dron.connect(connection_string, baud)
 print ('conectado')
 dron.arm()
@@ -33,6 +40,6 @@ time.sleep (5)
 print ('vamos a rotar 180')
 dron.rotate(180)
 print ('vamos a aterrizar')'''
-dron.Land()
+dron.land()
 print ('ya estoy en tierra')
 dron.disconnect()

@@ -15,7 +15,8 @@ while True:
 
 from pymavlink import mavutil
 
-master = mavutil.mavlink_connection('tcp:127.0.0.1:5763', baud=115200)
+#master = mavutil.mavlink_connection('tcp:127.0.0.1:5763', baud=115200)
+master = mavutil.mavlink_connection('udpin:127.0.0.1:14550')
 master.wait_heartbeat()
 master.mav.request_data_stream_send(
     master.target_system,

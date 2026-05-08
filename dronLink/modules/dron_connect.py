@@ -56,6 +56,14 @@ def _record_battery_info(self, msg):
 
 def _connect(self, connection_string, baud, callback=None, params=None):
     self.vehicle = mavutil.mavlink_connection(connection_string, baud)
+    self.vehicle.mav.heartbeat_send(
+        mavutil.mavlink.MAV_TYPE_GCS,
+        mavutil.mavlink.MAV_AUTOPILOT_INVALID,
+        0,
+        0,
+        0
+    )
+
     self.vehicle.wait_heartbeat()
     self.state = "connected"
 

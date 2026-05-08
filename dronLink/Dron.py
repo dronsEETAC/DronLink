@@ -51,6 +51,11 @@ class Dron(object):
         self.distance = None
         self.orientation = None
 
+        self.rc_throttle = 1500
+        self.rc_yaw = 1500
+        self.rc_pitch = 1500
+        self.rc_roll = 1500
+
 
 
     # aqui se importan los métodos de la clase Dron, que están organizados en ficheros.
@@ -63,7 +68,7 @@ class Dron(object):
     from dronLink.modules.dron_connect import connect, _connect, disconnect, _handle_heartbeat, _record_telemetry_info, _record_local_telemetry_info, reboot, _record_battery_info
     from dronLink.modules.dron_arm import arm, _arm, setFlightMode
     from dronLink.modules.dron_takeOff import takeOff, _takeOff, _checkAltitudeReached
-    from dronLink.modules.dron_RTL_Land import  RTL, Land, _goDown, _checkOnHearth
+    from dronLink.modules.dron_RTL_Land import  RTL, land, _goDown, _checkOnHearth
     from dronLink.modules.dron_nav import _prepare_command, go, _startGo, _stopGo, _goingTread, changeNavSpeed
     from dronLink.modules.dron_heading import changeHeading, _changeHeading, fixHeading, unfixHeading, _checkHeadingReached, rotate, _rotate
     from dronLink.modules.dron_goto import goto, _goto, _distanceToDestinationInMeters, _gotoLocal, gotoLocal, _checkLocalArrived, _checkGlobalArrived,_distancia_geografica
@@ -77,7 +82,7 @@ class Dron(object):
     from dronLink.modules.dron_drop import drop
     from dronLink.modules.dron_move import move_distance, _move_distance, _prepare_command_mov,setMoveSpeed, _checkSpeedZero
     from dronLink.modules.dron_bottomGeofence  import startBottomGeofence, stopBottomGeofence,  _minAltChecking
-    from dronLink.modules.dron_RC_override import send_rc
+    from dronLink.modules.dron_RC import send_rc, _send_rc_info, _record_rc_info, send_rc_info, stop_sending_rc_info
     from dronLink.modules.message_handler import MessageHandler
     from dronLink.modules.dron_minAltitude import CheckMinAlt, _CheckMinAlt, StopCheckingMinAlt
     from dronLink.modules.dron_inDoor import  ActivaLimitesIndoor,_ActivaLimitesIndoor

@@ -36,6 +36,6 @@ dron.goto(41.27636839666066, 1.9891508387116044,5)
 print ("Ya he llegado")
 time.sleep (5)
 
-dron.Land()
+dron.land()
 print ('ya estoy en tierra')
 dron.disconnect()

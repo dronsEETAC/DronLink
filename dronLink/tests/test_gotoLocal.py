@@ -33,6 +33,6 @@ dron.gotoLocal(-10,10,5)
 print ("Ya he llegado")
 
 
-dron.Land()
+dron.land()
 print ('ya estoy en tierra')
 dron.disconnect()

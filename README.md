@@ -135,10 +135,41 @@ el método de la librería va a añadir siempre ese identificador como primer pa
 callback que le indiquemos.
 
 La modalidad no bloqueante en las llamadas a la librería es especialmente útil **cuando
-queremos interactuar con el dron mediante una interfaz gráfica**. Por ejemplo, no vamos a
-querer que se bloquee la interfaz mientras el dron despega. Seguramente querremos seguir
-procesando los datos de telemetría mientras el dron despega, para mostrar al usuario, por
-ejemplo, la altura del dron en todo momento.     
+queremos interactuar con el dron mediante una interfaz gráfica**. Por ejemplo, supongamos que nuestra estación de tierra está hecha en tkinter y tiene un botón para hacer despegar el dron:    
+```
+takeOffBtn = tk.Button(ventana, text="Despegar", bg="dark orange", command=takeoff)
+takeOffBtn.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky=tk.N + tk.S + tk.E + tk.W)
+```
+Supongamos también que ña estación de tierra recibe los datos de telemetría que se usan para mostrar al usuario la posición del dron en todo momento.   
+ 
+Cuando se pulse el botón se ejecutará la función takeoff que podría ser esta:
+```
+def takeoff ():
+    global dron, takeOffBtn
+    # despegamos a una altura de 5 metros
+    dron.takeOff (5)
+    takeOffBtn['bg'] = 'green'
+```
+La llamada es bloqueante, por lo que el botón solo se pondrá en verde cuando el dron haya alcanzado lo 5 metros de altura. Mientras tanto, la interfaz gráfica quedará congelada y la información sobre la posición del dron no se actualizarán aunque se estén recibiendo los datos de telemetría.    
+
+La alternativa es hacer esto:
+```
+def takeoff ():
+    global dron
+    # despegamos a una altura de 5 metros
+    # llamada no bloqueante. Cuando alcance la altura indicada ejecutará la función inTheAir
+    dron.takeOff (5, blocking = False,  callback = inTheAir)
+    takeOffBtn['text'] = 'Despegando...'
+    takeOffBtn['fg'] = 'black'
+    takeOffBtn['bg'] = 'yellow'
+
+def inTheAir ():
+    # ya ha alcanzado la altura de despegue
+    takeOffBtn['text'] = 'En el aire'
+    takeOffBtn['fg'] = 'white'
+    takeOffBtn['bg'] = 'green'
+```
+Al usar una llamada no bloqueante la función takeoff acaba rápido de manera que el boton se muestra ya en color amarillo. Cuando el dron alcanza la altura de despegue se ejecuta la función inTheAir que pone el botón en verde. Mientras tanto, puesto que la interfaz no está bloqueada, la información sobre la posición del dron se va actualizando a medida que llegan los datos de telemetría.  
    
 En esta lista de distribución pueden encontrase varios vídeos que muestran estos conceptos en acción. Es importante tener en cuenta que en el momento de grabar esos vídeos la librería tenía el nombre provisional de DronLib, y no DronLink, que es el nombre actual. Incluso es posible que alguno de los métodos que se usan en los vídeos hayan cambiado. En la siguiente sección hay una descripción detallada de los métodos de la versión actual.    
 

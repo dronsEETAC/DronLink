@@ -111,7 +111,6 @@ class MessageHandler:
 
             if msg:
                 msg_type = msg.get_type()
-                #print ('recibo ', msg_type)
 
                 # primero miramos si hay alguna petición síncrona para este mensaje
                 with self.lock:

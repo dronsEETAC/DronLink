@@ -56,6 +56,8 @@ class Dron(object):
         self.rc_pitch = 1500
         self.rc_roll = 1500
 
+        self.parametros = None
+
 
 
     # aqui se importan los métodos de la clase Dron, que están organizados en ficheros.
@@ -72,7 +74,7 @@ class Dron(object):
     from dronLink.modules.dron_nav import _prepare_command, go, _startGo, _stopGo, _goingTread, changeNavSpeed
     from dronLink.modules.dron_heading import changeHeading, _changeHeading, fixHeading, unfixHeading, _checkHeadingReached, rotate, _rotate
     from dronLink.modules.dron_goto import goto, _goto, _distanceToDestinationInMeters, _gotoLocal, gotoLocal, _checkLocalArrived, _checkGlobalArrived,_distancia_geografica
-    from dronLink.modules.dron_parameters import getParams, _getParams, setParams, _setParams, _checkParameter
+    from dronLink.modules.dron_parameters import getParams, _getParams, setParams, _setParams, _checkParameter, _normalizaParametros, _descargarTodosLosParametros
     from dronLink.modules.dron_geofence import  setScenario, _setScenario, getScenario, _getScenario, _buildScenario
     from dronLink.modules.dron_telemetry import send_telemetry_info, _send_telemetry_info, stop_sending_telemetry_info
 

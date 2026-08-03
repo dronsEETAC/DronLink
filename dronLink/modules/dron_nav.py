@@ -1,3 +1,4 @@
+
 '''
 Coleccion de métodos para la navegación según los puntos cardinales.
 El dron debe estar en estado 'volando'
@@ -90,7 +91,7 @@ def _stopGo(self):
 
 def changeNavSpeed (self, speed):
     self.navSpeed = speed
-    newParameters = [{'ID': "WPNAV_SPEED", 'Value': speed*100}]
+    newParameters = [{'ID': "WP_SPD", 'Value': speed*100}]
     self.setParams(newParameters)
     if self.verbose:
         logging.info("Nueva velocidad de navegación: %s", str(speed))

@@ -67,6 +67,18 @@ def _connect(self, connection_string, baud, callback=None, params=None):
     self.vehicle.wait_heartbeat()
     self.state = "connected"
 
+    time.sleep(2)
+    # leo todos los parámetros
+    params = self._descargarTodosLosParametros()
+    if self.verbose:
+        logging.info("Parámetros descargados")
+
+    self.parametros = self._normalizaParametros(params)
+    if self.verbose:
+        logging.info("Parámetros normalizados")
+
+    print("Parametros leidos: ", len(self.parametros))
+
     # pongo en marcha el gestor de mensaje
     self.message_handler = MessageHandler(self.vehicle)
 
@@ -105,8 +117,10 @@ def _connect(self, connection_string, baud, callback=None, params=None):
         0
     )
 
+
+
     if self.verbose:
-        logging.info("Conectado al dron")
+        logging.info("Conectado con el dron")
 
     if callback != None:
         if self.id == None:

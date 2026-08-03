@@ -6,8 +6,8 @@ dron = Dron ()
 connection_string = 'tcp:127.0.0.1:5763'
 baud = 115200
 
-connection_string = 'com13'
-baud = 4800
+'''connection_string = 'com13'
+baud = 4800'''
 
 '''connection_string = 'com10'
 baud = 57600'''
@@ -24,11 +24,12 @@ parameters = [
     "FENCE_ALT_MAX",
     "FLTMODE6"
 ]
+print ("Voy a leer los parámetros")
 result = dron.getParams(parameters)
 print ('ya los tengo')
 print (result)
 print ('Cambio algunos')
-newParameters =[ {'ID': "FENCE_ENABLE", 'Value': 1}, {'ID': "FENCE_ACTION", 'Value': 3} ]
+newParameters =[ {'ID': "FENCE_ENABLE", 'Value': 0}, {'ID': "FENCE_ACTION", 'Value': 2} ]
 dron.setParams(newParameters)
 print ('Los vuelvo a leer')
 result = dron.getParams(parameters)

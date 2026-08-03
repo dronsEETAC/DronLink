@@ -3,13 +3,14 @@ import time
 from dronLink.Dron import Dron
 
 dron = Dron ()
-connection_string = 'udpout:localhost:12000'
+'''connection_string = 'udpout:localhost:12000'
 connection_string = f'udpout:127.0.0.1:14552'
 connection_string = f'udp:127.0.0.1:14551'
 #connection_string = 'tcp:127.0.0.1:5763'
 connection_string = f'udp:192.168.1.71:14550'
-connection_string = "udpout:10.254.58.56:14550"
+connection_string = "udpout:10.254.58.56:14550"'''
 #connection_string = 'tcp:10.254.58.77:5763'
+connection_string = 'tcp:127.0.0.1:5763'
 baud = 115200
 '''connection_string = 'com13'
 baud = 4800'''

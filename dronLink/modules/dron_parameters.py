@@ -133,9 +133,6 @@ def getParams(self, parameters, blocking=True, callback=None):
         getParamsThread = threading.Thread(target=self._getParams, args=[parameters, callback,])
         getParamsThread.start()
 
-
-
-de
 def _setParams(self, parameters, callback=None, params=None):
 
     for PARAM in parameters:
